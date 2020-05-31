@@ -1,6 +1,5 @@
 package io.chthonic.mythos2.example.utils
 
-import android.util.Log
 import timber.log.Timber
 
 /**
