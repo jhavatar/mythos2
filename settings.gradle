@@ -1,0 +1,3 @@
+rootProject.name='Mythos2'
+include ':examplekotlin'
+include ':mvvm'
