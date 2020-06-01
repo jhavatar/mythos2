@@ -10,10 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +64,7 @@ open class ViewControllerInfo<VM, VDB>(@LayoutRes private val viewDataBindingLay
             val fragment = compat.parentFragment
             return ViewControllerInfo<viewModel, viewDataBinding>(viewDataBindingLayoutRes,
                 fragment?.viewModelStore ?: activity.viewModelStore,
-                fragment?.viewLifecycleOwner ?: activity,
+                compat.lifeCycleOwner,
                 fragment ?: activity,
                 object : CoroutineScope {
                     override val coroutineContext: CoroutineContext
@@ -82,7 +79,7 @@ open class ViewControllerInfo<VM, VDB>(@LayoutRes private val viewDataBindingLay
             val fragment = compat.parentFragment
             return ViewControllerInfo<viewModel, viewDataBinding>(viewDataBindingLayoutRes,
                 activity.viewModelStore,
-                fragment?.viewLifecycleOwner ?: activity,
+                compat.lifeCycleOwner,
                 fragment ?: activity,
                 object : CoroutineScope {
                     override val coroutineContext: CoroutineContext

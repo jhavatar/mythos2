@@ -10,6 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.cancelChildren
 
 /**
@@ -34,6 +37,10 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
 
     override val parentActivity: FragmentActivity
         get() = context.fragmentActivity() ?: throw Exception("MVVMLayout's parent FragmentActivity not found")
+
+    private val customLifecycleOwner = CustomLifecycleOwner()
+    override val lifeCycleOwner: LifecycleOwner
+        get() = customLifecycleOwner
 
     override val parentFragment: Fragment?
         get() = parentFragmentTag?.let {
@@ -84,10 +91,16 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
 
     override fun onAttachedToWindow() {
         onCreate()
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         super.onAttachedToWindow()
     }
 
     override fun onDetachedFromWindow() {
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         onDestroy()
         vci.coroutineScope.coroutineContext.cancelChildren()
         super.onDetachedFromWindow()

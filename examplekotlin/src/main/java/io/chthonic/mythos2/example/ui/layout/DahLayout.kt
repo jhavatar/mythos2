@@ -6,12 +6,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
-import io.chthonic.mythos2.mvvm.MVVMLayout
-import io.chthonic.mythos2.mvvm.ViewControllerInfo
 import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
+import io.chthonic.mythos2.mvvm.MVVMLayout
+import io.chthonic.mythos2.mvvm.ViewControllerInfo
 
 /**
  * Created by jhavatar on 5/30/2020.
@@ -19,16 +21,31 @@ import io.chthonic.mythos2.example.utils.ExampleUtils
 class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
 
     override val vci: ViewControllerInfo<DahViewModel, LayoutDahBinding> by lazy {
-        ViewControllerInfo.compatViewControllerSharedViewModel<DahViewModel, LayoutDahBinding>(this, R.layout.layout_dah)
+        ViewControllerInfo.compatViewControllerUniqueViewModel<DahViewModel, LayoutDahBinding>(this, R.layout.layout_dah)
+    }
+
+    private val liveViewCount: LiveData<Int> by lazy {
+        ExampleUtils.getLiveInstanceCount(DahLayout::class.java)
     }
 
     override fun onCreate() {
         vci.bindViewModel<DahViewModel>(application)
         vci.bindViewData(LayoutInflater.from(context), this, true)
-        vci.viewDataBinding.dahText.text = "view = ${ExampleUtils.getInstanceCount(this, this::class.java)}, viewModel = ${vci.viewModel.instanceCount}"
+
+        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(liveViewCount.value ?: 0, it)
+        })
+        liveViewCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+        })
+        ExampleUtils.notifyInstance(this)
     }
 
     override fun onDestroy() {
+    }
+
+    private fun upateText(viewCount : Int, viewModelCount: Int) {
+        vci.viewDataBinding.dahText.text = "DAH: view = $viewCount, viewModel = $viewModelCount"
     }
 
     constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) : super(context, parentFragmentTag, parentFragmentId)

@@ -2,6 +2,8 @@ package io.chthonic.mythos2.example.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.ActivityFusBinding
 import io.chthonic.mythos2.mvvm.ViewControllerInfo
@@ -18,13 +20,24 @@ class FusActivity : AppCompatActivity() {
         )
     }
 
+    private val liveViewCount: LiveData<Int> by lazy {
+        ExampleUtils.getLiveInstanceCount(FusActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         vci.bindViewModel<FusViewModel>(application, intent.extras ?: Bundle())
         vci.bindViewData(this)
 
-        showRo()
+        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(liveViewCount.value ?: 0, it)
+        })
+        liveViewCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+        })
+        ExampleUtils.notifyInstance(this)
+
 
         vci.viewDataBinding.buttonToggleRo.setOnClickListener {
             toggleRo()
@@ -33,6 +46,8 @@ class FusActivity : AppCompatActivity() {
         vci.viewDataBinding.buttonToggleDah.setOnClickListener {
             toggleDah()
         }
+
+        showRo()
     }
 
 
@@ -52,15 +67,14 @@ class FusActivity : AppCompatActivity() {
     }
 
     private fun toggleDah() {
-        if (vci.viewDataBinding.dahLayout.childCount > 0) {
-            vci.viewDataBinding.dahLayout.removeAllViews()
+        if (vci.viewDataBinding.layoutContainer.childCount > 0) {
+            vci.viewDataBinding.layoutContainer.removeAllViews()
         } else {
-            vci.viewDataBinding.dahLayout.addView(DahLayout(this))
+            vci.viewDataBinding.layoutContainer.addView(DahLayout(this))
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        vci.viewDataBinding.fusText.text = "view = ${ExampleUtils.getInstanceCount(this, this::class.java)}, viewModel = ${vci.viewModel.instanceCount}"
+    private fun upateText(viewCount : Int, viewModelCount: Int) {
+        vci.viewDataBinding.fusText.text = "FUS: view = $viewCount, viewModel = $viewModelCount"
     }
 }

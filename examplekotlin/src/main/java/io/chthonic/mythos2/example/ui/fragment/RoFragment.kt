@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
+import io.chthonic.mythos2.example.ui.activity.FusActivity
 import io.chthonic.mythos2.mvvm.ViewControllerInfo
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.RoViewModel
@@ -16,6 +19,10 @@ class RoFragment : Fragment(){
 
     private val vci : ViewControllerInfo<RoViewModel, FragmentRoBinding> by lazy  {
         ViewControllerInfo.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this, R.layout.fragment_ro)
+    }
+
+    private val liveViewCount: LiveData<Int> by lazy {
+        ExampleUtils.getLiveInstanceCount(RoFragment::class.java)
     }
 
     companion object {
@@ -32,7 +39,6 @@ class RoFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-
         vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
         vci.bindViewData(layoutInflater, container, false)
         return vci.viewDataBinding.root
@@ -40,6 +46,15 @@ class RoFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(liveViewCount.value ?: 0, it)
+        })
+        liveViewCount.observe(vci.lifeCycleOwner, Observer {
+            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+        })
+        ExampleUtils.notifyInstance(this)
+
         vci.viewDataBinding.buttonToggleDah.setOnClickListener {
             toggleDah()
         }
@@ -66,9 +81,7 @@ class RoFragment : Fragment(){
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        vci.viewDataBinding.roText.text = "view = ${ExampleUtils.getInstanceCount(this, this::class.java)}, viewModel = ${vci.viewModel.instanceCount}"
+    private fun upateText(viewCount : Int, viewModelCount: Int) {
+        vci.viewDataBinding.roText.text = "RO: view = $viewCount, viewModel = $viewModelCount"
     }
-
 }
