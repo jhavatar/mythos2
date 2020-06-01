@@ -21,7 +21,6 @@ import kotlinx.coroutines.cancelChildren
 abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
 
     abstract val vci : ViewControllerInfo<VM, VDB>
-
     abstract fun onCreate()
     abstract fun onDestroy()
 

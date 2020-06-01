@@ -18,5 +18,4 @@ class DahViewModel(baseViewModelArgs: MythosViewModelArgs) : MythosViewModel(bas
         ExampleUtils.notifyInstance(this)
         Timber.d("init: args = $args, args.keySet = ${args.keySet().joinToString()}, savedState = $savedState, savedState.keys = ${savedState.keys().joinToString()}")
     }
-
 }

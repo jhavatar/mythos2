@@ -88,17 +88,6 @@ open class ViewControllerInfo<VM, VDB>(@LayoutRes private val viewDataBindingLay
         }
     }
 
-//    /**
-//     * [CoroutineScope] tied to this [Lifecycle].
-//     *
-//     * This scope will be cancelled when the [Lifecycle] is destroyed.
-//     *
-//     * This scope is bound to
-//     * [Dispatchers.Main.immediate][kotlinx.coroutines.MainCoroutineDispatcher.immediate]
-//     */
-//    val coroutineScope: CoroutineScope
-//        get() = lifeCycleOwner.lifecycle.coroutineScope
-
     lateinit var viewModel: VM
         protected set
     lateinit var viewDataBinding: VDB

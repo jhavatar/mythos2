@@ -3,7 +3,6 @@ package io.chthonic.mythos2.mvvm
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import java.lang.ref.WeakReference
 
 /**
  * Created by jhavatar on 5/30/2020.
