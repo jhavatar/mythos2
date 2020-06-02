@@ -9,16 +9,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
-import io.chthonic.mythos2.example.ui.activity.FusActivity
-import io.chthonic.mythos2.mvvm.ViewControllerInfo
+import io.chthonic.mythos2.mvvm.ViewControllerCore
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.RoViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
 
 class RoFragment : Fragment(){
 
-    private val vci : ViewControllerInfo<RoViewModel, FragmentRoBinding> by lazy  {
-        ViewControllerInfo.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this, R.layout.fragment_ro)
+    private val vci : ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy  {
+        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this, R.layout.fragment_ro)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {

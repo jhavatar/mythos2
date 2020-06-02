@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.ActivityFusBinding
-import io.chthonic.mythos2.mvvm.ViewControllerInfo
+import io.chthonic.mythos2.mvvm.ViewControllerCore
 import io.chthonic.mythos2.example.ui.fragment.RoFragment
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.FusViewModel
@@ -14,8 +14,8 @@ import io.chthonic.mythos2.example.utils.ExampleUtils
 
 class FusActivity : AppCompatActivity() {
 
-    private val vci: ViewControllerInfo<FusViewModel, ActivityFusBinding> by lazy {
-        ViewControllerInfo.activityViewController<FusViewModel, ActivityFusBinding>(this,
+    private val vci: ViewControllerCore<FusViewModel, ActivityFusBinding> by lazy {
+        ViewControllerCore.activityViewController<FusViewModel, ActivityFusBinding>(this,
             R.layout.activity_fus
         )
     }

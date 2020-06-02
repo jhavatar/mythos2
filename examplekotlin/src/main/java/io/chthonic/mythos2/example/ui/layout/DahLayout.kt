@@ -13,15 +13,15 @@ import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MVVMLayout
-import io.chthonic.mythos2.mvvm.ViewControllerInfo
+import io.chthonic.mythos2.mvvm.ViewControllerCore
 
 /**
  * Created by jhavatar on 5/30/2020.
  */
 class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
 
-    override val vci: ViewControllerInfo<DahViewModel, LayoutDahBinding> by lazy {
-        ViewControllerInfo.compatViewControllerUniqueViewModel<DahViewModel, LayoutDahBinding>(this, R.layout.layout_dah)
+    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
+        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding>(this, R.layout.layout_dah, defaultViewModelStore)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -29,7 +29,7 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
     }
 
     override fun onCreate() {
-        vci.bindViewModel<DahViewModel>(application)
+        vci.bindViewModel<DahViewModel>(checkNotNull(application))
         vci.bindViewData(LayoutInflater.from(context), this, true)
 
         vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {

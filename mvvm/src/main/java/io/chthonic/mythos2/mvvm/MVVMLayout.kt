@@ -3,6 +3,8 @@ package io.chthonic.mythos2.mvvm
 import android.app.Application
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
@@ -11,18 +13,28 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelStore
+import androidx.savedstate.SavedStateRegistryOwner
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.cancelChildren
+
 
 /**
  * Created by jhavatar on 5/30/2020.
  */
 abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
-
-    abstract val vci : ViewControllerInfo<VM, VDB>
+    abstract val vci : ViewControllerCore<VM, VDB>
     abstract fun onCreate()
     abstract fun onDestroy()
+
+    private val customSavedStateOwner: CustomLifecycleOwner by lazy {
+        CustomLifecycleOwner()
+    }
+    override val savedStateOwner: SavedStateRegistryOwner
+        get() = customSavedStateOwner
+    override val lifeCycleOwner: LifecycleOwner
+        get() = savedStateOwner
 
     protected var parentFragmentTag: String? = null
         private set
@@ -31,21 +43,20 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     protected var parentFragmentId: Int? = null
         private set
 
-    val application: Application
-        get() = parentActivity.application
+    val parentActivity: FragmentActivity?
+        get() = context.fragmentActivity() //?: throw Exception("MVVMLayout's parent FragmentActivity not found")
 
-    override val parentActivity: FragmentActivity
-        get() = context.fragmentActivity() ?: throw Exception("MVVMLayout's parent FragmentActivity not found")
+    val defaultViewModelStore: ViewModelStore
+        get() = parentFragment?.viewModelStore ?: checkNotNull(parentActivity).viewModelStore
 
-    private val customLifecycleOwner = CustomLifecycleOwner()
-    override val lifeCycleOwner: LifecycleOwner
-        get() = customLifecycleOwner
+    val application: Application?
+        get() = parentActivity?.application
 
-    override val parentFragment: Fragment?
+    val parentFragment: Fragment?
         get() = parentFragmentTag?.let {
-            parentActivity.supportFragmentManager.findFragmentByTag(it)
+            parentActivity?.supportFragmentManager?.findFragmentByTag(it)
         } ?: parentFragmentId?.let {
-            parentActivity.supportFragmentManager.findFragmentById(it)
+            parentActivity?.supportFragmentManager?.findFragmentById(it)
         }
 
     @JvmOverloads
@@ -89,19 +100,45 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     }
 
     override fun onAttachedToWindow() {
-        onCreate()
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         super.onAttachedToWindow()
+        if (!customSavedStateOwner.savedStateRegistryController.savedStateRegistry.isRestored) {
+            customSavedStateOwner.savedStateRegistryController.performRestore(Bundle())
+        }
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        onCreate()
     }
 
     override fun onDetachedFromWindow() {
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        customLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         onDestroy()
         vci.coroutineScope.coroutineContext.cancelChildren()
         super.onDetachedFromWindow()
     }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        return MvvmCustomViewStateWrapper(super.onSaveInstanceState(), Bundle().apply {
+            customSavedStateOwner.savedStateRegistryController.performSave(this)
+        })
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state is MvvmCustomViewStateWrapper) {
+            super.onRestoreInstanceState(state.superState)
+            customSavedStateOwner.savedStateRegistryController.performRestore(state.state ?: Bundle())
+
+        } else {
+            super.onRestoreInstanceState(state)
+            customSavedStateOwner.savedStateRegistryController.performRestore(Bundle())
+        }
+    }
 }
+
+@Parcelize
+data class MvvmCustomViewStateWrapper(
+    val superState: Parcelable?,
+    val state: Bundle?
+) : Parcelable
