@@ -14,6 +14,7 @@ import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MVVMLayout
 import io.chthonic.mythos2.mvvm.ViewControllerCore
+import timber.log.Timber
 
 /**
  * Created by jhavatar on 5/30/2020.
@@ -29,6 +30,7 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
     }
 
     override fun onCreate() {
+        Timber.v("onCreate")
         vci.bindViewModel<DahViewModel>(checkNotNull(application))
         vci.bindViewData(LayoutInflater.from(context), this, true)
 
@@ -41,7 +43,24 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
         ExampleUtils.notifyInstance(this)
     }
 
+    override fun onStart() {
+        Timber.v("onStart")
+    }
+
+    override fun onResume() {
+        Timber.v("onResume")
+    }
+
+    override fun onPause() {
+        Timber.v("onPause")
+    }
+
+    override fun onStop() {
+        Timber.v("onStop")
+    }
+
     override fun onDestroy() {
+        Timber.v("onDestroy")
     }
 
     private fun upateText(viewCount : Int, viewModelCount: Int) {
