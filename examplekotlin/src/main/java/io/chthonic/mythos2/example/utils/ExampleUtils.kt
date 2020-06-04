@@ -48,21 +48,4 @@ object ExampleUtils {
         Timber.d("notifyInstance: nuCount = $nuCount, clz = $clz")
         getMutableLiveInstanceCount(clz).postValue(nuCount)
     }
-
-//    @Synchronized
-//    fun getInstanceCount(nuInstance: Any, clz: Class<*>): Int  {
-//        Timber.d("getInstanceCount $nuInstance, clz = $clz")
-//        val nuHash = nuInstance.hashCode()
-//        val oldHash = hashMap[clz]
-//        val oldCount = countMap.getOrElse(clz, { 0 })
-//        return if (nuHash != oldHash) {
-//            hashMap[clz] = nuHash
-//            val nuCount = oldCount + 1
-//            countMap[clz] = nuCount
-//            nuCount
-//
-//        } else {
-//            oldCount
-//        }
-//    }
 }
