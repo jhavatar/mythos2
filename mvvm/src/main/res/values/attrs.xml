@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MVVMLayout">
+    <declare-styleable name="Mythos">
         <!-- key to lifecycle callback in a MVPLiceCycleDispatcher -->
-        <attr name="mvvmlayout_parentfragment_tag" format="string" />
-        <attr name="mvvmlayout_parentfragment_id" format="reference" />
+        <attr name="mythos_parentfragment_tag" format="string" />
+        <attr name="mythos_parentfragment_id" format="reference" />
     </declare-styleable>
 </resources>

@@ -12,14 +12,14 @@ import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
-import io.chthonic.mythos2.mvvm.MVVMLayout
+import io.chthonic.mythos2.mvvm.MythosLayout
 import io.chthonic.mythos2.mvvm.ViewControllerCore
 import timber.log.Timber
 
 /**
  * Created by jhavatar on 5/30/2020.
  */
-class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
+class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
     override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
         ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding>(this, R.layout.layout_dah, defaultViewModelStore)

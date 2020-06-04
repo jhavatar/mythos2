@@ -20,7 +20,7 @@ import kotlinx.android.parcel.Parcelize
 /**
  * Created by jhavatar on 5/30/2020.
  */
-abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
+abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
     abstract val vci: ViewControllerCore<VM, VDB>
     abstract fun onCreate()
     abstract fun onStart()
@@ -29,8 +29,8 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     abstract fun onStop()
     abstract fun onDestroy()
 
-    private val customSavedStateOwner: CustomLifecycleOwner by lazy {
-        CustomLifecycleOwner()
+    private val customSavedStateOwner: MythosCustomLifecycleOwner by lazy {
+        MythosCustomLifecycleOwner()
     }
     override val savedStateOwner: SavedStateRegistryOwner
         get() = customSavedStateOwner
@@ -63,31 +63,31 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     private val parentLifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         fun onParentEventStart() {
-            Log.v(MVVMLayout::class.simpleName, "onParentEventStart")
+            Log.v(MythosLayout::class.simpleName, "onParentEventStart")
             onEventStart()
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         fun onParentEventResume() {
-            Log.v(MVVMLayout::class.simpleName, "onParentEventResume")
+            Log.v(MythosLayout::class.simpleName, "onParentEventResume")
             onEventResume()
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         fun onParentEventPause() {
-            Log.v(MVVMLayout::class.simpleName, "onParentEventPause")
+            Log.v(MythosLayout::class.simpleName, "onParentEventPause")
             onEventPause()
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         fun onParentEventStop() {
-            Log.v(MVVMLayout::class.simpleName, "onParentEventStop")
+            Log.v(MythosLayout::class.simpleName, "onParentEventStop")
             onEventStop()
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         fun onParentEventDestroy() {
-            Log.v(MVVMLayout::class.simpleName, "onParentEventDestroy")
+            Log.v(MythosLayout::class.simpleName, "onParentEventDestroy")
             onEventDestroy()
         }
     }
@@ -115,12 +115,12 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
         if (attrs != null) {
             val ta = context?.obtainStyledAttributes(
                 attrs,
-                R.styleable.MVVMLayout,
+                R.styleable.Mythos,
                 defStyleAttr,
                 defStyleRes)
 
-            parentFragmentTag = ta?.getString(R.styleable.MVVMLayout_mvvmlayout_parentfragment_tag) ?: parentFragmentTag
-            parentFragmentId = (ta?.getResourceId(R.styleable.MVVMLayout_mvvmlayout_parentfragment_id, 0) ?: parentFragmentId).let {
+            parentFragmentTag = ta?.getString(R.styleable.Mythos_mythos_parentfragment_tag) ?: parentFragmentTag
+            parentFragmentId = (ta?.getResourceId(R.styleable.Mythos_mythos_parentfragment_id, 0) ?: parentFragmentId).let {
                 if (it == 0) {
                     null
                 } else {
@@ -140,7 +140,7 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
 
         val parentLifecycle = (parentFragment?.viewLifecycleOwner ?: parentActivity?.lifecycleOwner())?.lifecycle
         parentLifecycle?.addObserver(parentLifecycleObserver)
-        Log.v(MVVMLayout::class.simpleName, "onAttachedToWindow: parentLifecycle?.currentState = ${parentLifecycle?.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onAttachedToWindow: parentLifecycle?.currentState = ${parentLifecycle?.currentState}")
         when (parentLifecycle?.currentState) {
             Lifecycle.State.STARTED -> {
                 onEventStart()
@@ -162,7 +162,7 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     override fun onDetachedFromWindow() {
         val parentLifecycle = (parentFragment?.viewLifecycleOwner ?: parentActivity?.lifecycleOwner())?.lifecycle
         parentLifecycle?.removeObserver(parentLifecycleObserver)
-        Log.v(MVVMLayout::class.simpleName, "onDetachedFromWindow: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onDetachedFromWindow: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         when (lifeCycleOwner.lifecycle.currentState) {
             Lifecycle.State.RESUMED -> {
                 onEventPause()
@@ -182,13 +182,13 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     }
 
     override fun onSaveInstanceState(): Parcelable? {
-        return MvvmCustomViewStateWrapper(super.onSaveInstanceState(), Bundle().apply {
+        return MythosCustomViewStateWrapper(super.onSaveInstanceState(), Bundle().apply {
             customSavedStateOwner.savedStateRegistryController.performSave(this)
         })
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        if (state is MvvmCustomViewStateWrapper) {
+        if (state is MythosCustomViewStateWrapper) {
             super.onRestoreInstanceState(state.superState)
             customSavedStateOwner.savedStateRegistryController.performRestore(state.state ?: Bundle())
 
@@ -199,74 +199,74 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     }
 
     private fun onEventCreate() {
-        Log.v(MVVMLayout::class.simpleName, "onEventCreate: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventCreate: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             onCreate()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventCreate: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventCreate: IGNORE")
         }
     }
 
     private fun onEventStart() {
-        Log.v(MVVMLayout::class.simpleName, "onEventStart: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventStart: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             onStart()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventStart: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventStart: IGNORE")
         }
     }
 
     private fun onEventResume() {
-        Log.v(MVVMLayout::class.simpleName, "onEventResume: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventResume: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             onResume()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventResume: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventResume: IGNORE")
         }
     }
 
     private fun onEventPause() {
-        Log.v(MVVMLayout::class.simpleName, "onEventPause: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventPause: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.STARTED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
             onPause()
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventPause: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventPause: IGNORE")
         }
     }
 
     private fun onEventStop() {
-        Log.v(MVVMLayout::class.simpleName, "onEventStop: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventStop: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.CREATED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
             onStop()
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventStop: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventStop: IGNORE")
         }
     }
 
     private fun onEventDestroy() {
-        Log.v(MVVMLayout::class.simpleName, "onEventDestroy: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(MythosLayout::class.simpleName, "onEventDestroy: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.DESTROYED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             onDestroy()
 
         } else {
-            Log.v(MVVMLayout::class.simpleName, "onEventDestroy: IGNORE")
+            Log.v(MythosLayout::class.simpleName, "onEventDestroy: IGNORE")
         }
     }
 }
 
 @Parcelize
-data class MvvmCustomViewStateWrapper(
+data class MythosCustomViewStateWrapper(
     val superState: Parcelable?,
     val state: Bundle?
 ) : Parcelable
