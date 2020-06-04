@@ -33,12 +33,10 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
         Timber.v("onCreate")
         vci.bindViewModel<DahViewModel>(checkNotNull(application))
         vci.bindViewData(LayoutInflater.from(context), this, true)
+        vci.viewDataBinding.viewmodel = vci.viewModel
 
-        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(liveViewCount.value ?: 0, it)
-        })
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+            upateText(it)
         })
         ExampleUtils.notifyInstance(this)
     }
@@ -63,8 +61,8 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
         Timber.v("onDestroy")
     }
 
-    private fun upateText(viewCount: Int, viewModelCount: Int) {
-        vci.viewDataBinding.dahText.text = "DAH: view = $viewCount, viewModel = $viewModelCount"
+    private fun upateText(viewCount: Int) {
+        vci.viewDataBinding.dahTextView.text = "$viewCount,"
     }
 
     constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) : super(context, parentFragmentTag, parentFragmentId)

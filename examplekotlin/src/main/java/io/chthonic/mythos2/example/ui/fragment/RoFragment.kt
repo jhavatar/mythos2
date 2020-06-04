@@ -40,20 +40,17 @@ class RoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
         vci.bindViewData(layoutInflater, container, false)
+        vci.viewDataBinding.viewmodel = vci.viewModel
         return vci.viewDataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(liveViewCount.value ?: 0, it)
-        })
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+            upateText(it)
         })
         ExampleUtils.notifyInstance(this)
 
@@ -63,11 +60,11 @@ class RoFragment : Fragment() {
     }
 
     private fun toggleDah() {
-        if (vci.viewDataBinding.dahLayout.childCount > 0) {
-            vci.viewDataBinding.dahLayout.removeAllViews()
+        if (vci.viewDataBinding.layoutContainer.childCount > 0) {
+            vci.viewDataBinding.layoutContainer.removeAllViews()
         } else {
             this.context?.let {
-                vci.viewDataBinding.dahLayout.addView(DahLayout(it, parentFragmentTag = TAG))
+                vci.viewDataBinding.layoutContainer.addView(DahLayout(it, parentFragmentTag = TAG))
             }
         }
     }
@@ -83,7 +80,7 @@ class RoFragment : Fragment() {
         }
     }
 
-    private fun upateText(viewCount: Int, viewModelCount: Int) {
-        vci.viewDataBinding.roText.text = "RO: view = $viewCount, viewModel = $viewModelCount"
+    private fun upateText(viewCount: Int) {
+        vci.viewDataBinding.roTextView.text = "$viewCount,"
     }
 }

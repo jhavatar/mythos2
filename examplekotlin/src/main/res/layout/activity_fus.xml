@@ -4,22 +4,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewmodel"
+            type="io.chthonic.mythos2.example.ui.viewmodel.FusViewModel"/>
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/activity_vertical_margin"
         tools:context=".ui.activity.FusActivity"
-        android:background="#FC6C85"
-        android:orientation="vertical">
+        android:background="#FC6C85">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/fus_text"
-            android:text="FUS"
-            android:gravity="center"
+            android:text="FUS instance count (View, ViewModel) = "
+            android:id="@+id/fus_text_descript"
+            tools:ignore="MissingConstraints"
             android:textColor="@android:color/black"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fus_text_view"
+            android:text=""
+            android:textColor="@android:color/black"
+            tools:ignore="MissingConstraints"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fus_text_viewmodel"
+            android:text="@{viewmodel.liveViewModelInstanceCount}"
+            android:textColor="@android:color/black"
+            tools:ignore="MissingConstraints"
+            />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/fus_text"
+            app:constraint_referenced_ids="fus_text_descript,fus_text_view,fus_text_viewmodel"
+            app:flow_wrapMode="chain"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:flow_horizontalBias="0.0"
+            app:flow_firstVerticalBias="0.5"
             />
 
         <Button
@@ -29,14 +64,19 @@
             android:layout_gravity="right"
             android:gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="toggle ro"/>
+            android:text="toggle ro"
+            app:layout_constraintTop_toBottomOf="@id/fus_text"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            app:layout_constraintTop_toBottomOf="@id/button_toggle_ro"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -45,14 +85,19 @@
             android:layout_gravity="right"
             android:gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="toggle dah"/>
+            android:text="toggle dah"
+            app:layout_constraintTop_toBottomOf="@id/fragment_container"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
             android:id="@+id/layout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            app:layout_constraintTop_toBottomOf="@id/button_toggle_dah"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             >
 
             <io.chthonic.mythos2.example.ui.layout.DahLayout
@@ -62,5 +107,5 @@
                 />
 
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

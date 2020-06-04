@@ -1,6 +1,7 @@
 package io.chthonic.mythos2.example.ui.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MythosViewModel
 import io.chthonic.mythos2.mvvm.MythosViewModelArgs
@@ -11,8 +12,10 @@ import timber.log.Timber
  */
 class DahViewModel(baseViewModelArgs: MythosViewModelArgs) : MythosViewModel(baseViewModelArgs) {
 
-    val liveViewModelInstanceCount: LiveData<Int>
-        get() = ExampleUtils.getLiveInstanceCount(this::class.java)
+    val liveViewModelInstanceCount: LiveData<String>
+        get() = Transformations.map(ExampleUtils.getLiveInstanceCount(this::class.java)) {
+            it.toString()
+        }
 
     init {
         ExampleUtils.notifyInstance(this)

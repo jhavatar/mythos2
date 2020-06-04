@@ -29,12 +29,10 @@ class FusActivity : AppCompatActivity() {
 
         vci.bindViewModel<FusViewModel>(application, intent.extras ?: Bundle())
         vci.bindViewData(this)
+        vci.viewDataBinding.viewmodel = vci.viewModel
 
-        vci.viewModel.liveViewModelInstanceCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(liveViewCount.value ?: 0, it)
-        })
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(it, vci.viewModel.liveViewModelInstanceCount.value ?: 0)
+            upateText(it)
         })
         ExampleUtils.notifyInstance(this)
 
@@ -72,7 +70,7 @@ class FusActivity : AppCompatActivity() {
         }
     }
 
-    private fun upateText(viewCount: Int, viewModelCount: Int) {
-        vci.viewDataBinding.fusText.text = "FUS: view = $viewCount, viewModel = $viewModelCount"
+    private fun upateText(viewCount: Int) {
+        vci.viewDataBinding.fusTextView.text = "$viewCount,"
     }
 }

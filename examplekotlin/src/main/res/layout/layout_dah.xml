@@ -4,22 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewmodel"
+            type="io.chthonic.mythos2.example.ui.viewmodel.DahViewModel"/>
     </data>
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_vertical_margin"
-        android:background="#1FCECB"
-        >
+        tools:context=".ui.activity.FusActivity"
+        android:background="#1FCECB">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dah_text"
-            android:text="DAH"
-            android:gravity="center"
+            android:text="DAH instance count (View, ViewModel) = "
+            android:id="@+id/dah_text_descript"
+            tools:ignore="MissingConstraints"
             android:textColor="@android:color/black"
             />
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dah_text_view"
+            android:text=""
+            android:textColor="@android:color/black"
+            tools:ignore="MissingConstraints"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dah_text_viewmodel"
+            android:text="@{viewmodel.liveViewModelInstanceCount}"
+            android:textColor="@android:color/black"
+            tools:ignore="MissingConstraints"
+            />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/fus_text"
+            app:constraint_referenced_ids="dah_text_descript,dah_text_view,dah_text_viewmodel"
+            app:flow_wrapMode="chain"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:flow_horizontalBias="0.0"
+            app:flow_firstVerticalBias="0.5"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
