@@ -63,7 +63,7 @@ class DahLayout : MVVMLayout<DahViewModel, LayoutDahBinding> {
         Timber.v("onDestroy")
     }
 
-    private fun upateText(viewCount : Int, viewModelCount: Int) {
+    private fun upateText(viewCount: Int, viewModelCount: Int) {
         vci.viewDataBinding.dahText.text = "DAH: view = $viewCount, viewModel = $viewModelCount"
     }
 

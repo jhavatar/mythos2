@@ -16,14 +16,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.cancelChildren
-
 
 /**
  * Created by jhavatar on 5/30/2020.
  */
 abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
-    abstract val vci : ViewControllerCore<VM, VDB>
+    abstract val vci: ViewControllerCore<VM, VDB>
     abstract fun onCreate()
     abstract fun onStart()
     abstract fun onResume()
@@ -47,7 +45,7 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
         private set
 
     val parentActivity: FragmentActivity?
-        get() = context.fragmentActivity() //?: throw Exception("MVVMLayout's parent FragmentActivity not found")
+        get() = context.fragmentActivity() // ?: throw Exception("MVVMLayout's parent FragmentActivity not found")
 
     val defaultViewModelStore: ViewModelStore
         get() = parentFragment?.viewModelStore ?: checkNotNull(parentActivity).viewModelStore
@@ -112,7 +110,6 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         initAttrs(context, attrs, defStyleAttr = defStyleAttr, defStyleRes = defStyleRes)
     }
-
 
     private fun initAttrs(context: Context?, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) {
         if (attrs != null) {

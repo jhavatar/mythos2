@@ -4,7 +4,6 @@ import android.app.Application
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
-
 /**
  * Created by jhavatar on 3/15/2020.
  */
@@ -16,5 +15,4 @@ class App : Application() {
             Timber.plant(DebugTree())
         }
     }
-
 }

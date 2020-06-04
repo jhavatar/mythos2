@@ -22,6 +22,6 @@ open class MythosViewModel(baseArgs: MythosViewModelArgs) : AndroidViewModel(bas
      * This scope is bound to
      * [Dispatchers.Main.immediate][kotlinx.coroutines.MainCoroutineDispatcher.immediate]
      */
-    val coroutineScope : CoroutineScope
+    val coroutineScope: CoroutineScope
         get() = viewModelScope
 }

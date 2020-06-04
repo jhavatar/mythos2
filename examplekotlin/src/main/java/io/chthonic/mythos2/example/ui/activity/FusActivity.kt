@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.ActivityFusBinding
-import io.chthonic.mythos2.mvvm.ViewControllerCore
 import io.chthonic.mythos2.example.ui.fragment.RoFragment
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.FusViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
+import io.chthonic.mythos2.mvvm.ViewControllerCore
 
 class FusActivity : AppCompatActivity() {
 
@@ -38,7 +38,6 @@ class FusActivity : AppCompatActivity() {
         })
         ExampleUtils.notifyInstance(this)
 
-
         vci.viewDataBinding.buttonToggleRo.setOnClickListener {
             toggleRo()
         }
@@ -49,7 +48,6 @@ class FusActivity : AppCompatActivity() {
 
         showRo()
     }
-
 
     private fun toggleRo() {
         val fragment = supportFragmentManager.findFragmentByTag(RoFragment.TAG)
@@ -74,7 +72,7 @@ class FusActivity : AppCompatActivity() {
         }
     }
 
-    private fun upateText(viewCount : Int, viewModelCount: Int) {
+    private fun upateText(viewCount: Int, viewModelCount: Int) {
         vci.viewDataBinding.fusText.text = "FUS: view = $viewCount, viewModel = $viewModelCount"
     }
 }

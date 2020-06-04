@@ -17,16 +17,19 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * Created by jhavatar on 5/24/2020.
  */
-open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLayoutRes: Int,
-                                       val viewModelStore : ViewModelStore,
-                                       val lifeCycleOwner : LifecycleOwner,
-                                       val savedStateOwner : SavedStateRegistryOwner,
-                                       val coroutineScope: CoroutineScope) where VM : MythosViewModel, VDB : ViewDataBinding {
+open class ViewControllerCore<VM, VDB>(
+    @LayoutRes private val viewDataBindingLayoutRes: Int,
+    val viewModelStore: ViewModelStore,
+    val lifeCycleOwner: LifecycleOwner,
+    val savedStateOwner: SavedStateRegistryOwner,
+    val coroutineScope: CoroutineScope
+) where VM : MythosViewModel, VDB : ViewDataBinding {
 
     companion object {
-        inline fun <reified viewModel: MythosViewModel, reified viewDataBinding: ViewDataBinding> activityViewController(
+        inline fun <reified viewModel : MythosViewModel, reified viewDataBinding : ViewDataBinding> activityViewController(
             activity: FragmentActivity,
-            @LayoutRes viewDataBindingLayoutRes: Int): ViewControllerCore<viewModel, viewDataBinding> {
+            @LayoutRes viewDataBindingLayoutRes: Int
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(viewDataBindingLayoutRes,
                 activity.viewModelStore,
                 activity,
@@ -34,9 +37,10 @@ open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLay
                 activity.lifecycleScope)
         }
 
-        inline fun <reified viewModel: MythosViewModel, reified viewDataBinding: ViewDataBinding> fragmentViewControllerUniqueViewModel(
+        inline fun <reified viewModel : MythosViewModel, reified viewDataBinding : ViewDataBinding> fragmentViewControllerUniqueViewModel(
             fragment: Fragment,
-            @LayoutRes viewDataBindingLayoutRes: Int): ViewControllerCore<viewModel, viewDataBinding> {
+            @LayoutRes viewDataBindingLayoutRes: Int
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(viewDataBindingLayoutRes,
                 fragment.viewModelStore,
                 fragment.viewLifecycleOwner,
@@ -44,9 +48,10 @@ open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLay
                 fragment.viewLifecycleOwner.lifecycleScope)
         }
 
-        inline fun <reified viewModel: MythosViewModel, reified viewDataBinding: ViewDataBinding> fragmentViewControllerSharedViewModel(
+        inline fun <reified viewModel : MythosViewModel, reified viewDataBinding : ViewDataBinding> fragmentViewControllerSharedViewModel(
             fragment: Fragment,
-            @LayoutRes viewDataBindingLayoutRes: Int): ViewControllerCore<viewModel, viewDataBinding> {
+            @LayoutRes viewDataBindingLayoutRes: Int
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(viewDataBindingLayoutRes,
                 checkNotNull(fragment.activity).viewModelStore,
                 fragment.viewLifecycleOwner,
@@ -54,10 +59,11 @@ open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLay
                 fragment.viewLifecycleOwner.lifecycleScope)
         }
 
-        inline fun <reified viewModel: MythosViewModel, reified viewDataBinding: ViewDataBinding> compatViewController(
+        inline fun <reified viewModel : MythosViewModel, reified viewDataBinding : ViewDataBinding> compatViewController(
             compat: ViewControllerCompat,
             @LayoutRes viewDataBindingLayoutRes: Int,
-            viewModelStore : ViewModelStore): ViewControllerCore<viewModel, viewDataBinding> {
+            viewModelStore: ViewModelStore
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore<viewModel, viewDataBinding>(viewDataBindingLayoutRes,
                 viewModelStore,
                 compat.savedStateOwner,
@@ -71,8 +77,8 @@ open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLay
     lateinit var viewDataBinding: VDB
         protected set
 
-    inline fun <reified viewModelType: VM>bindViewModel(application: Application, args: Bundle = Bundle()) {
-        viewModel = ViewModelProvider(viewModelStore,  MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
+    inline fun <reified viewModelType : VM> bindViewModel(application: Application, args: Bundle = Bundle()) {
+        viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
     }
 
     fun bindViewData(activity: Activity) {
