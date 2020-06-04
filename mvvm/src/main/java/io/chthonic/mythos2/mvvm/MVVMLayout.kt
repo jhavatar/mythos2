@@ -172,12 +172,15 @@ abstract class MVVMLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM 
                 onEventStop()
                 onEventDestroy()
             }
+            Lifecycle.State.STARTED -> {
+                onEventStop()
+                onEventDestroy()
+            }
             else -> {
                 onEventDestroy()
             }
         }
 
-        vci.coroutineScope.coroutineContext.cancelChildren()
         super.onDetachedFromWindow()
     }
 
