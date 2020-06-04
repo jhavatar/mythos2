@@ -76,10 +76,15 @@ open class ViewControllerCore<VM, VDB>(@LayoutRes private val viewDataBindingLay
     }
 
     fun bindViewData(activity: Activity) {
-        viewDataBinding = DataBindingUtil.setContentView(activity, viewDataBindingLayoutRes)
+        bindViewData(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes))
     }
 
     fun bindViewData(layoutInflater: LayoutInflater, parent: ViewGroup?, attachToParent: Boolean) {
-        viewDataBinding = DataBindingUtil.inflate(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent)
+        bindViewData(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent))
+    }
+
+    fun bindViewData(nuViewDataBinding: VDB) {
+        viewDataBinding = nuViewDataBinding
+        viewDataBinding.lifecycleOwner = lifeCycleOwner
     }
 }
