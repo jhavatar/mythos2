@@ -17,7 +17,7 @@ import io.chthonic.mythos2.mvvm.ViewControllerCore
 class RoFragment : Fragment() {
 
     private val vci: ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy {
-        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this, R.layout.fragment_ro)
+        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -41,7 +41,11 @@ class RoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
-        vci.bindViewData(layoutInflater, container, false)
+        vci.bindViewData(
+            layoutInflater,
+            R.layout.fragment_ro,
+            container,
+            false)
         vci.viewDataBinding.viewmodel = vci.viewModel
         return vci.viewDataBinding.root
     }

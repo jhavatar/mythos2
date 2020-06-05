@@ -15,9 +15,7 @@ import io.chthonic.mythos2.mvvm.ViewControllerCore
 class FusActivity : AppCompatActivity() {
 
     private val vci: ViewControllerCore<FusViewModel, ActivityFusBinding> by lazy {
-        ViewControllerCore.activityViewController<FusViewModel, ActivityFusBinding>(this,
-            R.layout.activity_fus
-        )
+        ViewControllerCore.activityViewController<FusViewModel, ActivityFusBinding>(this)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -28,7 +26,7 @@ class FusActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         vci.bindViewModel<FusViewModel>(application, intent.extras ?: Bundle())
-        vci.bindViewData(this)
+        vci.bindViewData(this, R.layout.activity_fus)
         vci.viewDataBinding.viewmodel = vci.viewModel
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
