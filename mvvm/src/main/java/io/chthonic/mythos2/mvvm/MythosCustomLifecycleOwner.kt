@@ -9,7 +9,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 /**
  * Created by jhavatar on 6/1/2020.
  */
-class MythosCustomLifecycleOwner() : SavedStateRegistryOwner {
+class MythosCustomLifecycleOwner : SavedStateRegistryOwner {
 
     val savedStateRegistryController: SavedStateRegistryController by lazy {
         SavedStateRegistryController.create(this)

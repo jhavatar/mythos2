@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="Mythos">
+    <declare-styleable name="MythosLayout">
         <!-- key to lifecycle callback in a MVPLiceCycleDispatcher -->
         <attr name="mythos_parentfragment_tag" format="string" />
         <attr name="mythos_parentfragment_id" format="reference" />

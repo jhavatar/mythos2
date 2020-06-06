@@ -115,12 +115,12 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
         if (attrs != null) {
             val ta = context?.obtainStyledAttributes(
                 attrs,
-                R.styleable.Mythos,
+                R.styleable.MythosLayout,
                 defStyleAttr,
                 defStyleRes)
 
-            parentFragmentTag = ta?.getString(R.styleable.Mythos_mythos_parentfragment_tag) ?: parentFragmentTag
-            parentFragmentId = (ta?.getResourceId(R.styleable.Mythos_mythos_parentfragment_id, 0) ?: parentFragmentId).let {
+            parentFragmentTag = ta?.getString(R.styleable.MythosLayout_mythos_parentfragment_tag) ?: parentFragmentTag
+            parentFragmentId = (ta?.getResourceId(R.styleable.MythosLayout_mythos_parentfragment_id, 0) ?: parentFragmentId).let {
                 if (it == 0) {
                     null
                 } else {

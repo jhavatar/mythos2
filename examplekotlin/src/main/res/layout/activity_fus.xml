@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/activity_vertical_margin"
+        android:padding="@dimen/activity_margin"
         tools:context=".ui.activity.FusActivity"
         android:background="#FC6C85">
 
@@ -63,7 +63,7 @@
             android:id="@+id/button_toggle_ro"
             android:layout_gravity="right"
             android:gravity="center"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:text="toggle ro"
             app:layout_constraintTop_toBottomOf="@id/fus_text"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             app:layout_constraintTop_toBottomOf="@id/button_toggle_ro"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -84,7 +84,7 @@
             android:id="@+id/button_toggle_dah"
             android:layout_gravity="right"
             android:gravity="center"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:text="toggle dah"
             app:layout_constraintTop_toBottomOf="@id/fragment_container"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             app:layout_constraintTop_toBottomOf="@id/button_toggle_dah"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
