@@ -9,13 +9,14 @@ import io.chthonic.mythos2.example.databinding.ActivityFusBinding
 import io.chthonic.mythos2.example.ui.fragment.RoFragment
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.FusViewModel
+import io.chthonic.mythos2.example.ui.vu.ExampleVu
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.ViewControllerCore
 
 class FusActivity : AppCompatActivity() {
 
-    private val vci: ViewControllerCore<FusViewModel, ActivityFusBinding> by lazy {
-        ViewControllerCore.activityViewController<FusViewModel, ActivityFusBinding>(this)
+    private val vci: ViewControllerCore<FusViewModel, ActivityFusBinding, ExampleVu<ActivityFusBinding>> by lazy {
+        ViewControllerCore.activityViewController<FusViewModel, ActivityFusBinding, ExampleVu<ActivityFusBinding>>(this)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -26,11 +27,11 @@ class FusActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         vci.bindViewModel<FusViewModel>(application, intent.extras ?: Bundle())
-        vci.bindViewData(this, R.layout.activity_fus)
+        vci.bindViewData(this, R.layout.activity_fus, ::ExampleVu)
         vci.viewDataBinding.viewmodel = vci.viewModel
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(it)
+            vci.vu.upateText(it)
         })
         ExampleUtils.notifyInstance(this)
 
@@ -66,9 +67,5 @@ class FusActivity : AppCompatActivity() {
         } else {
             vci.viewDataBinding.layoutContainer.addView(DahLayout(this))
         }
-    }
-
-    private fun upateText(viewCount: Int) {
-        vci.viewDataBinding.fusTextView.text = "$viewCount,"
     }
 }

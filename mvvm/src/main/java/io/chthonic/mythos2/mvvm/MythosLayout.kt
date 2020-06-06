@@ -20,8 +20,8 @@ import kotlinx.android.parcel.Parcelize
 /**
  * Created by jhavatar on 5/30/2020.
  */
-abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
-    abstract val vci: ViewControllerCore<VM, VDB>
+abstract class MythosLayout<VM, VDB, V> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding, V : Vu<VDB> {
+    abstract val vci: ViewControllerCore<VM, VDB, V>
     abstract fun onCreate()
     abstract fun onStart()
     abstract fun onResume()
@@ -45,7 +45,7 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
         private set
 
     val parentActivity: FragmentActivity?
-        get() = context.fragmentActivity() // ?: throw Exception("MVVMLayout's parent FragmentActivity not found")
+        get() = context.fragmentActivity()
 
     val defaultViewModelStore: ViewModelStore
         get() = parentFragment?.viewModelStore ?: checkNotNull(parentActivity).viewModelStore

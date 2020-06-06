@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
+import io.chthonic.mythos2.example.ui.vu.ExampleVu
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MythosLayout
 import io.chthonic.mythos2.mvvm.ViewControllerCore
@@ -19,10 +20,10 @@ import timber.log.Timber
 /**
  * Created by jhavatar on 5/30/2020.
  */
-class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
+class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>> {
 
-    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
-        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding>(this, defaultViewModelStore)
+    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>> by lazy {
+        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>>(this, defaultViewModelStore)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -36,11 +37,12 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
             LayoutInflater.from(context),
             R.layout.layout_dah,
             this,
-            true)
+            true,
+            ::ExampleVu)
         vci.viewDataBinding.viewmodel = vci.viewModel
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            upateText(it)
+            vci.vu.upateText(it)
         })
         ExampleUtils.notifyInstance(this)
     }
@@ -63,10 +65,6 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
     override fun onDestroy() {
         Timber.v("onDestroy")
-    }
-
-    private fun upateText(viewCount: Int) {
-        vci.viewDataBinding.dahTextView.text = "$viewCount,"
     }
 
     constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) : super(context, parentFragmentTag, parentFragmentId)
