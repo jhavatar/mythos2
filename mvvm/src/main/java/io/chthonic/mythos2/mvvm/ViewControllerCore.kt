@@ -24,6 +24,29 @@ open class ViewControllerCore<VM, VDB>(
     val coroutineScope: CoroutineScope
 ) where VM : MythosViewModel, VDB : ViewDataBinding {
 
+    lateinit var viewModel: VM
+        protected set
+    lateinit var viewDataBinding: VDB
+        protected set
+
+    val vms: ViewModelStore
+        get() = viewModelStore
+
+    val lco: LifecycleOwner
+        get() = lifeCycleOwner
+
+    val sso: SavedStateRegistryOwner
+        get() = savedStateOwner
+
+    val crs: CoroutineScope
+        get() = coroutineScope
+
+    val vm: VM
+        get() = viewModel
+
+    val vdb: VDB
+        get() = viewDataBinding
+
     companion object {
         inline fun <reified viewModel : MythosViewModel, reified viewDataBinding : ViewDataBinding> activityViewController(
             activity: FragmentActivity
@@ -66,11 +89,6 @@ open class ViewControllerCore<VM, VDB>(
                 compat.savedStateOwner.lifecycle.coroutineScope)
         }
     }
-
-    lateinit var viewModel: VM
-        protected set
-    lateinit var viewDataBinding: VDB
-        protected set
 
     inline fun <reified viewModelType : VM> bindViewModel(application: Application, args: Bundle = Bundle()) {
         viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
