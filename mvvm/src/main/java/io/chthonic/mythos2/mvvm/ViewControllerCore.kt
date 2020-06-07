@@ -16,19 +16,17 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * Created by jhavatar on 5/24/2020.
  */
-open class ViewControllerCore<VM, VDB, V>(
+open class ViewControllerCore<VM, VDB>(
     val viewModelStore: ViewModelStore,
     val lifeCycleOwner: LifecycleOwner,
     val savedStateOwner: SavedStateRegistryOwner,
     val coroutineScope: CoroutineScope
-) where VM : MythosViewModel, VDB : ViewDataBinding, V : Vu<VDB> {
+) where VM : MythosViewModel, VDB : ViewDataBinding {
 
     lateinit var viewModel: VM
         protected set
-    lateinit var vu: V
+    lateinit var viewDataBinding: VDB
         protected set
-    val viewDataBinding: VDB
-        get() = vu.viewDataBinding
 
     val vms: ViewModelStore
         get() = viewModelStore
@@ -49,9 +47,9 @@ open class ViewControllerCore<VM, VDB, V>(
         get() = viewDataBinding
 
     companion object {
-        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding, vu : Vu<viewDataBinding>> activityViewController(
+        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> activityViewController(
             activity: FragmentActivity
-        ): ViewControllerCore<viewModel, viewDataBinding, vu> {
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(
                 activity.viewModelStore,
                 activity,
@@ -59,9 +57,9 @@ open class ViewControllerCore<VM, VDB, V>(
                 activity.lifecycleScope)
         }
 
-        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding, vu : Vu<viewDataBinding>> fragmentViewControllerUniqueViewModel(
+        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerUniqueViewModel(
             fragment: Fragment
-        ): ViewControllerCore<viewModel, viewDataBinding, vu> {
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(
                 fragment.viewModelStore,
                 fragment.viewLifecycleOwner,
@@ -69,9 +67,9 @@ open class ViewControllerCore<VM, VDB, V>(
                 fragment.viewLifecycleOwner.lifecycleScope)
         }
 
-        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding, vu : Vu<viewDataBinding>> fragmentViewControllerSharedViewModel(
+        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerSharedViewModel(
             fragment: Fragment
-        ): ViewControllerCore<viewModel, viewDataBinding, vu> {
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(
                 checkNotNull(fragment.activity).viewModelStore,
                 fragment.viewLifecycleOwner,
@@ -79,10 +77,10 @@ open class ViewControllerCore<VM, VDB, V>(
                 fragment.viewLifecycleOwner.lifecycleScope)
         }
 
-        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding, vu : Vu<viewDataBinding>> compatViewController(
+        fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> compatViewController(
             compat: ViewControllerCompat,
             viewModelStore: ViewModelStore
-        ): ViewControllerCore<viewModel, viewDataBinding, vu> {
+        ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(
                 viewModelStore,
                 compat.savedStateOwner,
@@ -95,33 +93,24 @@ open class ViewControllerCore<VM, VDB, V>(
         viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
     }
 
-    fun bindView(
+    fun bindViewData(
         activity: FragmentActivity,
-        @LayoutRes viewDataBindingLayoutRes: Int,
-        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
+        @LayoutRes viewDataBindingLayoutRes: Int
     ) {
-        bindView(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes), activity, null, factory)
+        bindViewData(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes))
     }
 
-    fun bindView(
+    fun bindViewData(
         layoutInflater: LayoutInflater,
         @LayoutRes viewDataBindingLayoutRes: Int,
         parent: ViewGroup?,
-        attachToParent: Boolean,
-        activity: FragmentActivity,
-        fragment: Fragment?,
-        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
+        attachToParent: Boolean
     ) {
-        bindView(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent), activity, fragment, factory)
+        bindViewData(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent))
     }
 
-    fun bindView(
-        nuViewDataBinding: VDB,
-        activity: FragmentActivity,
-        fragment: Fragment?,
-        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
-    ) {
+    fun bindViewData(nuViewDataBinding: VDB) {
+        viewDataBinding = nuViewDataBinding
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
-        vu = factory(nuViewDataBinding, activity, fragment)
     }
 }

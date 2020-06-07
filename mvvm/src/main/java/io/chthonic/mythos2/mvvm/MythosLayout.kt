@@ -20,14 +20,19 @@ import kotlinx.android.parcel.Parcelize
 /**
  * Created by jhavatar on 5/30/2020.
  */
-abstract class MythosLayout<VM, VDB, V> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding, V : Vu<VDB> {
-    abstract val vci: ViewControllerCore<VM, VDB, V>
+abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
+    protected abstract val vci: ViewControllerCore<VM, VDB>
     abstract fun onCreate()
     abstract fun onStart()
     abstract fun onResume()
     abstract fun onPause()
     abstract fun onStop()
     abstract fun onDestroy()
+
+    protected val viewModel: VM
+        get() = vci.viewModel
+    protected val vdb: VDB
+        get() = vci.vdb
 
     private val customSavedStateOwner: MythosCustomLifecycleOwner by lazy {
         MythosCustomLifecycleOwner()

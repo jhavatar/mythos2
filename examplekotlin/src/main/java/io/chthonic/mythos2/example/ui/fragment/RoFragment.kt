@@ -11,14 +11,13 @@ import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
 import io.chthonic.mythos2.example.ui.layout.DahLayout
 import io.chthonic.mythos2.example.ui.viewmodel.RoViewModel
-import io.chthonic.mythos2.example.ui.vu.ExampleVu
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.ViewControllerCore
 
 class RoFragment : Fragment() {
 
-    private val vci: ViewControllerCore<RoViewModel, FragmentRoBinding, ExampleVu<FragmentRoBinding>> by lazy {
-        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding, ExampleVu<FragmentRoBinding>>(this)
+    private val vci: ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy {
+        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -42,14 +41,12 @@ class RoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
-        vci.bindView(
+        vci.bindViewData(
             layoutInflater,
             R.layout.fragment_ro,
             container,
-            false,
-            requireActivity(),
-            this,
-            ::ExampleVu)
+            false
+        )
         vci.viewDataBinding.viewmodel = vci.viewModel
         return vci.viewDataBinding.root
     }
@@ -58,7 +55,7 @@ class RoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            vci.vu.upateText(it)
+            ExampleUtils.upateViewCountText(vci.vdb.root, it)
         })
         ExampleUtils.notifyInstance(this)
 

@@ -1,7 +1,10 @@
 package io.chthonic.mythos2.example.utils
 
+import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.chthonic.mythos2.example.R
 import timber.log.Timber
 
 /**
@@ -47,5 +50,9 @@ object ExampleUtils {
         }
         Timber.d("notifyInstance: nuCount = $nuCount, clz = $clz")
         getMutableLiveInstanceCount(clz).postValue(nuCount)
+    }
+
+    fun upateViewCountText(root: View, viewCount: Int) {
+        root.findViewById<TextView>(R.id.text_view).text = "$viewCount,"
     }
 }

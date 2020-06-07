@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
-import io.chthonic.mythos2.example.ui.vu.ExampleVu
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MythosLayout
 import io.chthonic.mythos2.mvvm.ViewControllerCore
@@ -20,10 +19,10 @@ import timber.log.Timber
 /**
  * Created by jhavatar on 5/30/2020.
  */
-class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>> {
+class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
-    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>> by lazy {
-        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding, ExampleVu<LayoutDahBinding>>(this, defaultViewModelStore)
+    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
+        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding>(this, defaultViewModelStore)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -33,18 +32,16 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding, ExampleVu<LayoutD
     override fun onCreate() {
         Timber.v("onCreate")
         vci.bindViewModel<DahViewModel>(checkNotNull(application))
-        vci.bindView(
+        vci.bindViewData(
             LayoutInflater.from(context),
             R.layout.layout_dah,
             this,
-            true,
-            requireParentActivity(),
-            parentFragment,
-            ::ExampleVu)
+            true
+        )
         vci.viewDataBinding.viewmodel = vci.viewModel
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
-            vci.vu.upateText(it)
+            ExampleUtils.upateViewCountText(vdb.root, it)
         })
         ExampleUtils.notifyInstance(this)
     }
