@@ -42,11 +42,13 @@ class RoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
-        vci.bindViewData(
+        vci.bindView(
             layoutInflater,
             R.layout.fragment_ro,
             container,
             false,
+            requireActivity(),
+            this,
             ::ExampleVu)
         vci.viewDataBinding.viewmodel = vci.viewModel
         return vci.viewDataBinding.root

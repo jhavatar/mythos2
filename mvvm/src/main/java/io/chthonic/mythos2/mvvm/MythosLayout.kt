@@ -111,6 +111,11 @@ abstract class MythosLayout<VM, VDB, V> : FrameLayout, ViewControllerCompat wher
         initAttrs(context, attrs, defStyleAttr = defStyleAttr, defStyleRes = defStyleRes)
     }
 
+    fun requireParentActivity(): FragmentActivity {
+        return parentActivity
+            ?: throw IllegalStateException("MythosLayout $this not attached to an activity.")
+    }
+
     private fun initAttrs(context: Context?, attrs: AttributeSet?, defStyleAttr: Int = 0, defStyleRes: Int = 0) {
         if (attrs != null) {
             val ta = context?.obtainStyledAttributes(

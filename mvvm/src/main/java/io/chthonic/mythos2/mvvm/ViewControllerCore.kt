@@ -1,6 +1,5 @@
 package io.chthonic.mythos2.mvvm
 
-import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -96,29 +95,33 @@ open class ViewControllerCore<VM, VDB, V>(
         viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
     }
 
-    fun bindViewData(
-        activity: Activity,
+    fun bindView(
+        activity: FragmentActivity,
         @LayoutRes viewDataBindingLayoutRes: Int,
-        factory: (viewDataBinding: VDB) -> V
+        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
     ) {
-        bindViewData(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes), factory)
+        bindView(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes), activity, null, factory)
     }
 
-    fun bindViewData(
+    fun bindView(
         layoutInflater: LayoutInflater,
         @LayoutRes viewDataBindingLayoutRes: Int,
         parent: ViewGroup?,
         attachToParent: Boolean,
-        factory: (viewDataBinding: VDB) -> V
+        activity: FragmentActivity,
+        fragment: Fragment?,
+        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
     ) {
-        bindViewData(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent), factory)
+        bindView(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent), activity, fragment, factory)
     }
 
-    fun bindViewData(
+    fun bindView(
         nuViewDataBinding: VDB,
-        factory: (viewDataBinding: VDB) -> V
+        activity: FragmentActivity,
+        fragment: Fragment?,
+        factory: (viewDataBinding: VDB, activity: FragmentActivity, fragment: Fragment?) -> V
     ) {
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
-        vu = factory(nuViewDataBinding)
+        vu = factory(nuViewDataBinding, activity, fragment)
     }
 }

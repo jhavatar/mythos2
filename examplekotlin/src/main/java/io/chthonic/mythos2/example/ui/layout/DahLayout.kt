@@ -33,11 +33,13 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding, ExampleVu<LayoutD
     override fun onCreate() {
         Timber.v("onCreate")
         vci.bindViewModel<DahViewModel>(checkNotNull(application))
-        vci.bindViewData(
+        vci.bindView(
             LayoutInflater.from(context),
             R.layout.layout_dah,
             this,
             true,
+            requireParentActivity(),
+            parentFragment,
             ::ExampleVu)
         vci.viewDataBinding.viewmodel = vci.viewModel
 

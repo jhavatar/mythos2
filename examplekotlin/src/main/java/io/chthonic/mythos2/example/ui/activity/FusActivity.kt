@@ -27,7 +27,7 @@ class FusActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         vci.bindViewModel<FusViewModel>(application, intent.extras ?: Bundle())
-        vci.bindViewData(this, R.layout.activity_fus, ::ExampleVu)
+        vci.bindView(this, R.layout.activity_fus, ::ExampleVu)
         vci.viewDataBinding.viewmodel = vci.viewModel
 
         liveViewCount.observe(vci.lifeCycleOwner, Observer {
