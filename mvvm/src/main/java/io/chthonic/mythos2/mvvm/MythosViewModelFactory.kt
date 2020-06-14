@@ -2,7 +2,9 @@ package io.chthonic.mythos2.mvvm
 
 import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.*
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 
 /**
@@ -11,8 +13,8 @@ import androidx.savedstate.SavedStateRegistryOwner
 class MythosViewModelFactory(
     private val application: Application,
     owner: SavedStateRegistryOwner,
-    fallbackSavedSate: Bundle? = null,
-    private val args: Bundle = Bundle()
+    private val args: Bundle = Bundle(),
+    fallbackSavedSate: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, fallbackSavedSate) {
 
     override fun <T : ViewModel?> create(

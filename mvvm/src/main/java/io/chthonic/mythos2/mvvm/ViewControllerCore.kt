@@ -2,6 +2,7 @@ package io.chthonic.mythos2.mvvm
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -89,8 +90,12 @@ open class ViewControllerCore<VM, VDB>(
         }
     }
 
-    inline fun <reified viewModelType : VM> bindViewModel(application: Application, args: Bundle = Bundle()) {
-        viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application, savedStateOwner, args)).get(viewModelType::class.java)
+    inline fun <reified viewModelType : VM> bindViewModel(application: Application, args: Bundle = Bundle(), fallbackSavedSate: Bundle? = null) {
+        Log.d("ViewControllerCore", "bindViewModel: args.keyset = ${args.keySet()}")
+        viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application,
+            owner = savedStateOwner,
+            args = args,
+            fallbackSavedSate = fallbackSavedSate)).get(viewModelType::class.java)
     }
 
     fun bindViewData(
