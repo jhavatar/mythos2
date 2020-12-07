@@ -21,7 +21,7 @@ object ExampleUtils {
         return if (liveData != null) {
             liveData
         } else {
-            val nuLiveData = MutableLiveData<Int>(0)
+            val nuLiveData = MutableLiveData(0)
             liveCountMap[clz] = nuLiveData
             nuLiveData
         }

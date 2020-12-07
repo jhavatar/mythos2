@@ -17,7 +17,7 @@ import io.chthonic.mythos2.mvvm.ViewControllerCore
 class RoFragment : Fragment() {
 
     private val vci: ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy {
-        ViewControllerCore.fragmentViewControllerSharedViewModel<RoViewModel, FragmentRoBinding>(this)
+        ViewControllerCore.fragmentViewControllerSharedViewModel(this)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -54,7 +54,7 @@ class RoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        liveViewCount.observe(vci.lifeCycleOwner, Observer {
+        liveViewCount.observe(vci.lifeCycleOwner, {
             ExampleUtils.upateViewCountText(vci.vdb.root, it)
         })
         ExampleUtils.notifyInstance(this)

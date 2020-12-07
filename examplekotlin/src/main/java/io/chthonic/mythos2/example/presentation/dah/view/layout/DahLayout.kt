@@ -22,7 +22,7 @@ import timber.log.Timber
 class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
     override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
-        ViewControllerCore.compatViewController<DahViewModel, LayoutDahBinding>(this, defaultViewModelStore)
+        ViewControllerCore.compatViewController(this, defaultViewModelStore)
     }
 
     private val liveViewCount: LiveData<Int> by lazy {
@@ -40,7 +40,7 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
         )
         vci.viewDataBinding.viewmodel = vci.viewModel
 
-        liveViewCount.observe(vci.lifeCycleOwner, Observer {
+        liveViewCount.observe(vci.lifeCycleOwner, {
             ExampleUtils.upateViewCountText(vdb.root, it)
         })
         ExampleUtils.notifyInstance(this)

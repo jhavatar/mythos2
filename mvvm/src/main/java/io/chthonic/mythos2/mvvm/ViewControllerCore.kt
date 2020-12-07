@@ -55,7 +55,8 @@ open class ViewControllerCore<VM, VDB>(
                 activity.viewModelStore,
                 activity,
                 activity,
-                activity.lifecycleScope)
+                activity.lifecycleScope
+            )
         }
 
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerUniqueViewModel(
@@ -65,7 +66,8 @@ open class ViewControllerCore<VM, VDB>(
                 fragment.viewModelStore,
                 fragment.viewLifecycleOwner,
                 fragment,
-                fragment.viewLifecycleOwner.lifecycleScope)
+                fragment.viewLifecycleOwner.lifecycleScope
+            )
         }
 
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerSharedViewModel(
@@ -75,7 +77,8 @@ open class ViewControllerCore<VM, VDB>(
                 checkNotNull(fragment.activity).viewModelStore,
                 fragment.viewLifecycleOwner,
                 fragment,
-                fragment.viewLifecycleOwner.lifecycleScope)
+                fragment.viewLifecycleOwner.lifecycleScope
+            )
         }
 
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> compatViewController(
@@ -86,23 +89,33 @@ open class ViewControllerCore<VM, VDB>(
                 viewModelStore,
                 compat.savedStateOwner,
                 compat.savedStateOwner,
-                compat.savedStateOwner.lifecycle.coroutineScope)
+                compat.savedStateOwner.lifecycle.coroutineScope
+            )
         }
     }
 
-    inline fun <reified viewModelType : VM> bindViewModel(application: Application, args: Bundle = Bundle(), fallbackSavedSate: Bundle? = null) {
+    inline fun <reified viewModelType : VM> bindViewModel(
+        application: Application,
+        args: Bundle = Bundle(),
+        fallbackSavedSate: Bundle? = null
+    ) {
         Log.d("ViewControllerCore", "bindViewModel: args.keyset = ${args.keySet()}")
-        viewModel = ViewModelProvider(viewModelStore, MythosViewModelFactory(application,
-            owner = savedStateOwner,
-            args = args,
-            fallbackSavedSate = fallbackSavedSate)).get(viewModelType::class.java)
+        `access$viewModel` = ViewModelProvider(
+            viewModelStore,
+            MythosViewModelFactory(
+                application,
+                owner = savedStateOwner,
+                args = args,
+                fallbackSavedSate = fallbackSavedSate
+            )
+        ).get(viewModelType::class.java)
     }
 
     fun bindViewData(
         activity: FragmentActivity,
         @LayoutRes viewDataBindingLayoutRes: Int
     ) {
-        bindViewData(DataBindingUtil.setContentView<VDB>(activity, viewDataBindingLayoutRes))
+        bindViewData(DataBindingUtil.setContentView(activity, viewDataBindingLayoutRes))
     }
 
     fun bindViewData(
@@ -111,12 +124,26 @@ open class ViewControllerCore<VM, VDB>(
         parent: ViewGroup?,
         attachToParent: Boolean
     ) {
-        bindViewData(DataBindingUtil.inflate<VDB>(layoutInflater, viewDataBindingLayoutRes, parent, attachToParent))
+        bindViewData(
+            DataBindingUtil.inflate(
+                layoutInflater,
+                viewDataBindingLayoutRes,
+                parent,
+                attachToParent
+            )
+        )
     }
 
     fun bindViewData(nuViewDataBinding: VDB) {
         viewDataBinding = nuViewDataBinding
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
     }
+
+    @PublishedApi
+    internal var `access$viewModel`: VM
+        get() = viewModel
+        set(value) {
+            viewModel = value
+        }
 
 }
