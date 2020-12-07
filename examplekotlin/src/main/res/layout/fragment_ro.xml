@@ -6,13 +6,13 @@
         <import type="android.view.View" />
         <variable
             name="viewmodel"
-            type="io.chthonic.mythos2.example.ui.viewmodel.RoViewModel"/>
+            type="io.chthonic.mythos2.example.presentation.ro.viewmodel.RoViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_margin"
-        tools:context=".ui.activity.FusActivity"
+        tools:context=".presentation.fus.view.activity.FusActivity"
         android:background="#A8E4A0">
 
         <TextView
@@ -78,7 +78,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             >
-            <io.chthonic.mythos2.example.ui.layout.DahLayout
+            <io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
                 android:id="@+id/dah_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

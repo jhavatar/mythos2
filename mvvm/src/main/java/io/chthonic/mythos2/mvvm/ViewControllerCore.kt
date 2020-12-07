@@ -118,4 +118,5 @@ open class ViewControllerCore<VM, VDB>(
         viewDataBinding = nuViewDataBinding
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
     }
+
 }

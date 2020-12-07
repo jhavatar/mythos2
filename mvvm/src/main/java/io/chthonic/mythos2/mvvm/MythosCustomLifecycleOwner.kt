@@ -30,4 +30,5 @@ class MythosCustomLifecycleOwner : SavedStateRegistryOwner {
     fun handleLifecycleEvent(event: Lifecycle.Event) {
         lifecycleRegistry.handleLifecycleEvent(event)
     }
+
 }

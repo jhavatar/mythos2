@@ -1,4 +1,4 @@
-package io.chthonic.mythos2.example.ui.layout
+package io.chthonic.mythos2.example.presentation.dah.view.layout
 
 import android.content.Context
 import android.os.Build
@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
-import io.chthonic.mythos2.example.ui.viewmodel.DahViewModel
+import io.chthonic.mythos2.example.presentation.dah.viewmodel.DahViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.MythosLayout
 import io.chthonic.mythos2.mvvm.ViewControllerCore

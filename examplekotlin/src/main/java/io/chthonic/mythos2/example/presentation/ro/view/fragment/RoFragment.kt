@@ -1,4 +1,4 @@
-package io.chthonic.mythos2.example.ui.fragment
+package io.chthonic.mythos2.example.presentation.ro.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
-import io.chthonic.mythos2.example.ui.layout.DahLayout
-import io.chthonic.mythos2.example.ui.viewmodel.RoViewModel
+import io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
+import io.chthonic.mythos2.example.presentation.ro.viewmodel.RoViewModel
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.ViewControllerCore
 
@@ -84,4 +84,5 @@ class RoFragment : Fragment() {
             args.putAll(it)
         }
     }
+
 }

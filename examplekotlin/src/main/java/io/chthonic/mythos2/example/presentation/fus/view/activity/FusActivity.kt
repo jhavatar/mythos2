@@ -1,4 +1,4 @@
-package io.chthonic.mythos2.example.ui.activity
+package io.chthonic.mythos2.example.presentation.fus.view.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.ActivityFusBinding
-import io.chthonic.mythos2.example.ui.fragment.RoFragment
-import io.chthonic.mythos2.example.ui.layout.DahLayout
-import io.chthonic.mythos2.example.ui.viewmodel.FusViewModel
+import io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
+import io.chthonic.mythos2.example.presentation.fus.viewmodel.FusViewModel
+import io.chthonic.mythos2.example.presentation.ro.view.fragment.RoFragment
 import io.chthonic.mythos2.example.utils.ExampleUtils
 import io.chthonic.mythos2.mvvm.ViewControllerCore
 
@@ -67,4 +67,5 @@ class FusActivity : AppCompatActivity() {
             vci.viewDataBinding.layoutContainer.addView(DahLayout(this))
         }
     }
+
 }

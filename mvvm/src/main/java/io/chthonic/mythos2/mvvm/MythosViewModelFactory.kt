@@ -24,4 +24,5 @@ class MythosViewModelFactory(
     ): T {
         return modelClass.getConstructor(MythosViewModelArgs::class.java).newInstance(MythosViewModelArgs(application, handle, args))
     }
+
 }

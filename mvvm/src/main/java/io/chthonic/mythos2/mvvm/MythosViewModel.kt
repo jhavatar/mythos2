@@ -24,4 +24,5 @@ open class MythosViewModel(baseArgs: MythosViewModelArgs) : AndroidViewModel(bas
      */
     val coroutineScope: CoroutineScope
         get() = viewModelScope
+
 }

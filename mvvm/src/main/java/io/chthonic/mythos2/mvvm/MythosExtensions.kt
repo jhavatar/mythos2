@@ -14,10 +14,11 @@ fun Context.fragmentActivity(): FragmentActivity? {
     while (--maxDepth > 0 && curContext !is FragmentActivity) {
         curContext = (curContext as ContextWrapper).baseContext
     }
-    return if (curContext is FragmentActivity)
+    return if (curContext is FragmentActivity) {
         curContext
-    else
+    } else {
         null
+    }
 }
 
 fun Context.lifecycleOwner(): LifecycleOwner? {
