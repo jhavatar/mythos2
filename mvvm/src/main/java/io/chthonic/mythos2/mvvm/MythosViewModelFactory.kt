@@ -22,7 +22,8 @@ class MythosViewModelFactory(
         modelClass: Class<T>,
         handle: SavedStateHandle
     ): T {
-        return modelClass.getConstructor(MythosViewModelArgs::class.java).newInstance(MythosViewModelArgs(application, handle, args))
+        return modelClass.getConstructor(MythosViewModelArgs::class.java)
+            .newInstance(MythosViewModelArgs(application, handle, args))
     }
 
 }

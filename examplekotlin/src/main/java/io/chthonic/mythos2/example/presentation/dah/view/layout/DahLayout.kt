@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.presentation.dah.viewmodel.DahViewModel
@@ -31,7 +30,7 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
     override fun onCreate() {
         Timber.v("onCreate")
-        vci.bindViewModel<DahViewModel>(checkNotNull(application))
+        vci.bindViewModel<DahViewModel>(requireNotNull(application))
         vci.bindViewData(
             LayoutInflater.from(context),
             R.layout.layout_dah,
@@ -40,9 +39,12 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
         )
         vci.viewDataBinding.viewmodel = vci.viewModel
 
-        liveViewCount.observe(vci.lifeCycleOwner, {
-            ExampleUtils.upateViewCountText(vdb.root, it)
-        })
+        liveViewCount.observe(
+            vci.lifeCycleOwner,
+            {
+                ExampleUtils.upateViewCountText(vdb.root, it)
+            }
+        )
         ExampleUtils.notifyInstance(this)
     }
 
@@ -66,9 +68,15 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
         Timber.v("onDestroy")
     }
 
-    constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) : super(context, parentFragmentTag, parentFragmentId)
+    constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) :
+        super(context, parentFragmentTag, parentFragmentId)
+
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) :
+        super(context, attrs, defStyleAttr, defStyleRes)
+
 }

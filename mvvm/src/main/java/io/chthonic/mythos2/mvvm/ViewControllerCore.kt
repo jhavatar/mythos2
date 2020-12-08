@@ -24,29 +24,6 @@ open class ViewControllerCore<VM, VDB>(
     val coroutineScope: CoroutineScope
 ) where VM : MythosViewModel, VDB : ViewDataBinding {
 
-    lateinit var viewModel: VM
-        protected set
-    lateinit var viewDataBinding: VDB
-        protected set
-
-    val vms: ViewModelStore
-        get() = viewModelStore
-
-    val lco: LifecycleOwner
-        get() = lifeCycleOwner
-
-    val sso: SavedStateRegistryOwner
-        get() = savedStateOwner
-
-    val crs: CoroutineScope
-        get() = coroutineScope
-
-    val vm: VM
-        get() = viewModel
-
-    val vdb: VDB
-        get() = viewDataBinding
-
     companion object {
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> activityViewController(
             activity: FragmentActivity
@@ -74,7 +51,7 @@ open class ViewControllerCore<VM, VDB>(
             fragment: Fragment
         ): ViewControllerCore<viewModel, viewDataBinding> {
             return ViewControllerCore(
-                checkNotNull(fragment.activity).viewModelStore,
+                fragment.requireActivity().viewModelStore,
                 fragment.viewLifecycleOwner,
                 fragment,
                 fragment.viewLifecycleOwner.lifecycleScope
@@ -94,13 +71,48 @@ open class ViewControllerCore<VM, VDB>(
         }
     }
 
+    // region shortened names
+
+    val vms: ViewModelStore
+        get() = viewModelStore
+
+    val lco: LifecycleOwner
+        get() = lifeCycleOwner
+
+    val sso: SavedStateRegistryOwner
+        get() = savedStateOwner
+
+    val crs: CoroutineScope
+        get() = coroutineScope
+
+    val vm: VM
+        get() = viewModel
+
+    val vdb: VDB
+        get() = viewDataBinding
+
+    // endregion
+
+    lateinit var viewModel: VM
+        protected set
+
+    @PublishedApi
+    internal var accessProtectedViewModelInPublicInline: VM
+        get() = viewModel
+        set(value) {
+            viewModel = value
+        }
+
+    lateinit var viewDataBinding: VDB
+        protected set
+
     inline fun <reified viewModelType : VM> bindViewModel(
         application: Application,
         args: Bundle = Bundle(),
         fallbackSavedSate: Bundle? = null
     ) {
         Log.d("ViewControllerCore", "bindViewModel: args.keyset = ${args.keySet()}")
-        `access$viewModel` = ViewModelProvider(
+        accessProtectedViewModelInPublicInline = ViewModelProvider(
             viewModelStore,
             MythosViewModelFactory(
                 application,
@@ -138,12 +150,5 @@ open class ViewControllerCore<VM, VDB>(
         viewDataBinding = nuViewDataBinding
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
     }
-
-    @PublishedApi
-    internal var `access$viewModel`: VM
-        get() = viewModel
-        set(value) {
-            viewModel = value
-        }
 
 }

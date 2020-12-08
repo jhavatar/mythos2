@@ -3,7 +3,6 @@ package io.chthonic.mythos2.example.presentation.fus.view.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.ActivityFusBinding
 import io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
@@ -29,9 +28,12 @@ class FusActivity : AppCompatActivity() {
         vci.bindViewData(this, R.layout.activity_fus)
         vci.viewDataBinding.viewmodel = vci.viewModel
 
-        liveViewCount.observe(vci.lifeCycleOwner, {
-            ExampleUtils.upateViewCountText(vci.vdb.root, it)
-        })
+        liveViewCount.observe(
+            vci.lifeCycleOwner,
+            {
+                ExampleUtils.upateViewCountText(vci.vdb.root, it)
+            }
+        )
         ExampleUtils.notifyInstance(this)
 
         vci.viewDataBinding.buttonToggleRo.setOnClickListener {

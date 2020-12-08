@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
 import io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
@@ -40,7 +39,7 @@ class RoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        vci.bindViewModel<RoViewModel>(checkNotNull(activity).application)
+        vci.bindViewModel<RoViewModel>(requireActivity().application)
         vci.bindViewData(
             layoutInflater,
             R.layout.fragment_ro,
@@ -54,9 +53,12 @@ class RoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        liveViewCount.observe(vci.lifeCycleOwner, {
-            ExampleUtils.upateViewCountText(vci.vdb.root, it)
-        })
+        liveViewCount.observe(
+            vci.lifeCycleOwner,
+            {
+                ExampleUtils.upateViewCountText(vci.vdb.root, it)
+            }
+        )
         ExampleUtils.notifyInstance(this)
 
         vci.viewDataBinding.buttonToggleDah.setOnClickListener {

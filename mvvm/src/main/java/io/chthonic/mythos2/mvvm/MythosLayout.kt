@@ -20,40 +20,32 @@ import kotlinx.android.parcel.Parcelize
 /**
  * Created by jhavatar on 5/30/2020.
  */
-abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where VM : MythosViewModel, VDB : ViewDataBinding {
+abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat
+        where VM : MythosViewModel, VDB : ViewDataBinding {
+
+    // region abstract
+
     protected abstract val vci: ViewControllerCore<VM, VDB>
+
     abstract fun onCreate()
+
     abstract fun onStart()
+
     abstract fun onResume()
+
     abstract fun onPause()
+
     abstract fun onStop()
+
     abstract fun onDestroy()
 
-    protected val viewModel: VM
-        get() = vci.viewModel
-    protected val vdb: VDB
-        get() = vci.vdb
-
-    private val customSavedStateOwner: MythosCustomLifecycleOwner by lazy {
-        MythosCustomLifecycleOwner()
-    }
-    override val savedStateOwner: SavedStateRegistryOwner
-        get() = customSavedStateOwner
-    override val lifeCycleOwner: LifecycleOwner
-        get() = savedStateOwner
-
-    protected var parentFragmentTag: String? = null
-        private set
-
-    @IdRes
-    protected var parentFragmentId: Int? = null
-        private set
+    // endregion
 
     val parentActivity: FragmentActivity?
         get() = context.fragmentActivity()
 
     val defaultViewModelStore: ViewModelStore
-        get() = parentFragment?.viewModelStore ?: checkNotNull(parentActivity).viewModelStore
+        get() = parentFragment?.viewModelStore ?: requireParentActivity().viewModelStore
 
     val application: Application?
         get() = parentActivity?.application
@@ -97,11 +89,35 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
         }
     }
 
-    @JvmOverloads
-    constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) : super(context) {
-        this.parentFragmentTag = parentFragmentTag
-        this.parentFragmentId = parentFragmentId
+    protected val viewModel: VM
+        get() = vci.viewModel
+
+    protected val vdb: VDB
+        get() = vci.vdb
+
+    override val savedStateOwner: SavedStateRegistryOwner
+        get() = customSavedStateOwner
+
+    override val lifeCycleOwner: LifecycleOwner
+        get() = savedStateOwner
+
+    private val customSavedStateOwner: MythosCustomLifecycleOwner by lazy {
+        MythosCustomLifecycleOwner()
     }
+
+    protected var parentFragmentTag: String? = null
+        private set
+
+    @IdRes
+    protected var parentFragmentId: Int? = null
+        private set
+
+    @JvmOverloads
+    constructor(context: Context, parentFragmentTag: String? = null, @IdRes parentFragmentId: Int? = null) :
+        super(context) {
+            this.parentFragmentTag = parentFragmentTag
+            this.parentFragmentId = parentFragmentId
+        }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         initAttrs(context, attrs)
@@ -112,7 +128,12 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
         initAttrs(context, attrs, defStyleAttr = defStyleAttr, defStyleRes = defStyleRes)
     }
 
@@ -127,16 +148,18 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
                 attrs,
                 R.styleable.MythosLayout,
                 defStyleAttr,
-                defStyleRes)
+                defStyleRes
+            )
 
             parentFragmentTag = ta?.getString(R.styleable.MythosLayout_mythos_parentfragment_tag) ?: parentFragmentTag
-            parentFragmentId = (ta?.getResourceId(R.styleable.MythosLayout_mythos_parentfragment_id, 0) ?: parentFragmentId).let {
-                if (it == 0) {
-                    null
-                } else {
-                    it
+            parentFragmentId =
+                (ta?.getResourceId(R.styleable.MythosLayout_mythos_parentfragment_id, 0) ?: parentFragmentId).let {
+                    if (it == 0) {
+                        null
+                    } else {
+                        it
+                    }
                 }
-            }
             ta?.recycle()
         }
     }
@@ -150,7 +173,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
 
         val parentLifecycle = (parentFragment?.viewLifecycleOwner ?: parentActivity?.lifecycleOwner())?.lifecycle
         parentLifecycle?.addObserver(parentLifecycleObserver)
-        Log.v(MythosLayout::class.simpleName, "onAttachedToWindow: parentLifecycle?.currentState = ${parentLifecycle?.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onAttachedToWindow: parentLifecycle?.currentState = ${parentLifecycle?.currentState}"
+        )
         when (parentLifecycle?.currentState) {
             Lifecycle.State.STARTED -> {
                 onEventStart()
@@ -172,7 +198,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     override fun onDetachedFromWindow() {
         val parentLifecycle = (parentFragment?.viewLifecycleOwner ?: parentActivity?.lifecycleOwner())?.lifecycle
         parentLifecycle?.removeObserver(parentLifecycleObserver)
-        Log.v(MythosLayout::class.simpleName, "onDetachedFromWindow: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onDetachedFromWindow: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         when (lifeCycleOwner.lifecycle.currentState) {
             Lifecycle.State.RESUMED -> {
                 onEventPause()
@@ -192,9 +221,12 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     override fun onSaveInstanceState(): Parcelable? {
-        return MythosCustomViewStateWrapper(super.onSaveInstanceState(), Bundle().apply {
-            customSavedStateOwner.savedStateRegistryController.performSave(this)
-        })
+        return MythosCustomViewStateWrapper(
+            super.onSaveInstanceState(),
+            Bundle().apply {
+                customSavedStateOwner.savedStateRegistryController.performSave(this)
+            }
+        )
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
@@ -209,7 +241,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventCreate() {
-        Log.v(MythosLayout::class.simpleName, "onEventCreate: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventCreate: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             onCreate()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -220,7 +255,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventStart() {
-        Log.v(MythosLayout::class.simpleName, "onEventStart: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventStart: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             onStart()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
@@ -231,7 +269,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventResume() {
-        Log.v(MythosLayout::class.simpleName, "onEventResume: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventResume: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (!lifeCycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             onResume()
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -242,7 +283,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventPause() {
-        Log.v(MythosLayout::class.simpleName, "onEventPause: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventPause: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.STARTED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
             onPause()
@@ -253,7 +297,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventStop() {
-        Log.v(MythosLayout::class.simpleName, "onEventStop: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventStop: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.CREATED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
             onStop()
@@ -264,7 +311,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat where V
     }
 
     private fun onEventDestroy() {
-        Log.v(MythosLayout::class.simpleName, "onEventDestroy: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}")
+        Log.v(
+            MythosLayout::class.simpleName,
+            "onEventDestroy: lifecycle.currentState = ${lifeCycleOwner.lifecycle.currentState}"
+        )
         if (lifeCycleOwner.lifecycle.currentState != Lifecycle.State.DESTROYED) {
             customSavedStateOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             onDestroy()
