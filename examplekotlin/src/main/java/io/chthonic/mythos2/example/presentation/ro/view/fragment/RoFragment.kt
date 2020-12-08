@@ -51,7 +51,7 @@ class RoFragment : Fragment() {
         viewController.viewModel.getViewInstanceCountObservable(RoFragment::class.java).observe(
             viewController.lifeCycleOwner,
             {
-                ExampleUtils.upateViewCountText(viewController.vdb.root, it)
+                ExampleUtils.displayViewCountText(viewController.viewDataBinding.root, it)
             }
         )
         ExampleUtils.notifyInstance(this)
@@ -62,12 +62,27 @@ class RoFragment : Fragment() {
     }
 
     private fun toggleDah() {
-        if (viewController.viewDataBinding.layoutContainer.childCount > 0) {
-            viewController.viewDataBinding.layoutContainer.removeAllViews()
+        // Remove Dah instance if present, otherwise add new instance.
+        if (hasDah()) {
+            removeDah()
         } else {
-            this.context?.let {
-                viewController.viewDataBinding.layoutContainer.addView(DahLayout(it, parentFragmentTag = TAG))
-            }
+            addDah()
+        }
+    }
+
+    private fun hasDah(): Boolean {
+        return viewController.viewDataBinding.layoutContainer.childCount > 0
+    }
+
+    private fun removeDah() {
+        // remove Dah view from layout.
+        viewController.viewDataBinding.layoutContainer.removeAllViews()
+    }
+
+    private fun addDah() {
+        // add Dah view to layout.
+        this.context?.let {
+            viewController.viewDataBinding.layoutContainer.addView(DahLayout(it, parentFragmentTag = TAG))
         }
     }
 

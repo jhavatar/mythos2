@@ -52,7 +52,7 @@ object ExampleUtils {
         getInstanceCountMutableObservable(clz).postValue(nuCount)
     }
 
-    fun upateViewCountText(root: View, viewCount: Int) {
+    fun displayViewCountText(root: View, viewCount: Int) {
         root.findViewById<TextView>(R.id.text_view).text = "$viewCount,"
     }
 

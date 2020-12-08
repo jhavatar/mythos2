@@ -37,7 +37,7 @@ class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
         viewController.viewModel.getViewInstanceCountObservable(DahLayout::class.java).observe(
             viewController.lifeCycleOwner,
             {
-                ExampleUtils.upateViewCountText(viewDataBinding.root, it)
+                ExampleUtils.displayViewCountText(viewDataBinding.root, it)
             }
         )
         ExampleUtils.notifyInstance(this)

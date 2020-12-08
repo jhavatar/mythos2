@@ -26,7 +26,7 @@ class FusActivity : AppCompatActivity() {
         viewController.viewModel.getViewInstanceCountObservable(FusActivity::class.java).observe(
             viewController.lifeCycleOwner,
             {
-                ExampleUtils.upateViewCountText(viewController.vdb.root, it)
+                ExampleUtils.displayViewCountText(viewController.viewDataBinding.root, it)
             }
         )
         ExampleUtils.notifyInstance(this)
@@ -39,33 +39,60 @@ class FusActivity : AppCompatActivity() {
             toggleDah()
         }
 
-        showRo()
+        addRo()
+    }
+
+    private fun toggleRo() {
+        // Remove Ro instance if present, otherwise add new instance.
+        if (hasRo()) {
+            removeRo()
+        } else {
+            addRo()
+        }
     }
 
     private fun RoFragment.Companion.findFragmentByTag(): RoFragment? =
         supportFragmentManager.findFragmentByTag(TAG) as? RoFragment
 
-    private fun toggleRo() {
-        val fragment = RoFragment.findFragmentByTag()
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
-        } else {
-            showRo()
+    private fun hasRo(): Boolean {
+        return RoFragment.findFragmentByTag() != null
+    }
+
+    private fun removeRo() {
+        // Remove fragment Ro from layout.
+        RoFragment.findFragmentByTag()?.let {
+            supportFragmentManager.beginTransaction().remove(it).commit()
         }
     }
 
-    private fun showRo() {
+    private fun addRo() {
+        // Add fragment Ro to layout. If instance exists, replace it.
         supportFragmentManager.beginTransaction()
             .replace(viewController.viewDataBinding.fragmentContainer.id, RoFragment.newInstance(), RoFragment.TAG)
             .commitNow()
     }
 
     private fun toggleDah() {
-        if (viewController.viewDataBinding.layoutContainer.childCount > 0) {
-            viewController.viewDataBinding.layoutContainer.removeAllViews()
+        // Remove Dah instance if present, otherwise add new instance.
+        if (hasDah()) {
+            removeDah()
         } else {
-            viewController.viewDataBinding.layoutContainer.addView(DahLayout(this))
+            addDah()
         }
+    }
+
+    private fun hasDah(): Boolean {
+        return viewController.viewDataBinding.layoutContainer.childCount > 0
+    }
+
+    private fun removeDah() {
+        // remove Dah view from layout.
+        viewController.viewDataBinding.layoutContainer.removeAllViews()
+    }
+
+    private fun addDah() {
+        // add Dah view to layout.
+        viewController.viewDataBinding.layoutContainer.addView(DahLayout(this))
     }
 
 }

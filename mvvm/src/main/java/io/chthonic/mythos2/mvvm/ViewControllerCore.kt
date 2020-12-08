@@ -25,6 +25,10 @@ open class ViewControllerCore<VM, VDB>(
 ) where VM : MythosViewModel, VDB : ViewDataBinding {
 
     companion object {
+
+        /**
+         * Optimized creation of [ViewControllerCore] for a [FragmentActivity].
+         */
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> activityViewController(
             activity: FragmentActivity
         ): ViewControllerCore<viewModel, viewDataBinding> {
@@ -36,6 +40,9 @@ open class ViewControllerCore<VM, VDB>(
             )
         }
 
+        /**
+         * Optimized creation of [ViewControllerCore] for a [Fragment] with a unique [MythosViewModel].
+         */
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerUniqueViewModel(
             fragment: Fragment
         ): ViewControllerCore<viewModel, viewDataBinding> {
@@ -47,6 +54,9 @@ open class ViewControllerCore<VM, VDB>(
             )
         }
 
+        /**
+         * Optimized creation of [ViewControllerCore] for a [Fragment] with [MythosViewModel] shared across its [FragmentActivity].
+         */
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> fragmentViewControllerSharedViewModel(
             fragment: Fragment
         ): ViewControllerCore<viewModel, viewDataBinding> {
@@ -58,6 +68,10 @@ open class ViewControllerCore<VM, VDB>(
             )
         }
 
+        /**
+         * Create [ViewControllerCore] for a [ViewControllerCompat] instance
+         * with [viewModelStore] storing the [MythosViewModel].
+         */
         fun <viewModel : MythosViewModel, viewDataBinding : ViewDataBinding> compatViewController(
             compat: ViewControllerCompat,
             viewModelStore: ViewModelStore
@@ -111,7 +125,7 @@ open class ViewControllerCore<VM, VDB>(
         args: Bundle = Bundle(),
         fallbackSavedSate: Bundle? = null
     ) {
-        Log.d("ViewControllerCore", "bindViewModel: args.keyset = ${args.keySet()}")
+        Log.v("ViewControllerCore", "bindViewModel: args.keyset = ${args.keySet()}")
         accessProtectedViewModelInPublicInline = ViewModelProvider(
             viewModelStore,
             MythosViewModelFactory(
@@ -123,6 +137,9 @@ open class ViewControllerCore<VM, VDB>(
         ).get(viewModelType::class.java)
     }
 
+    /**
+     * Optimized initialize and set of [ViewDataBinding] for a [FragmentActivity].
+     */
     fun bindViewData(
         activity: FragmentActivity,
         @LayoutRes viewDataBindingLayoutRes: Int
@@ -130,6 +147,9 @@ open class ViewControllerCore<VM, VDB>(
         bindViewData(DataBindingUtil.setContentView(activity, viewDataBindingLayoutRes))
     }
 
+    /**
+     * Initialize and set the [ViewDataBinding] from components.
+     */
     fun bindViewData(
         layoutInflater: LayoutInflater,
         @LayoutRes viewDataBindingLayoutRes: Int,
@@ -146,6 +166,9 @@ open class ViewControllerCore<VM, VDB>(
         )
     }
 
+    /**
+     * Set a [ViewDataBinding].
+     */
     fun bindViewData(nuViewDataBinding: VDB) {
         viewDataBinding = nuViewDataBinding
         nuViewDataBinding.lifecycleOwner = lifeCycleOwner
