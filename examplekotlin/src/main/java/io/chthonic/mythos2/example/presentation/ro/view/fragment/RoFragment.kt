@@ -61,17 +61,6 @@ class RoFragment : Fragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val args = Bundle()
-        activity?.intent?.extras?.let {
-            args.putAll(it)
-        }
-        this.arguments?.let {
-            args.putAll(it)
-        }
-    }
-
     private fun toggleDah() {
         if (viewController.viewDataBinding.layoutContainer.childCount > 0) {
             viewController.viewDataBinding.layoutContainer.removeAllViews()

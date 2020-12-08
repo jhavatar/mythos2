@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'maven'
+apply plugin: 'kotlin-kapt'
 
 version = maven.versionName
 group = maven.group
@@ -47,8 +48,8 @@ dependencies {
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
 
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    // test
+    testImplementation "junit:junit:${versions.test.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidx.junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"
 }
