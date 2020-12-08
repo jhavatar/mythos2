@@ -25,7 +25,7 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat
 
     // region abstract
 
-    protected abstract val vci: ViewControllerCore<VM, VDB>
+    protected abstract val viewController: ViewControllerCore<VM, VDB>
 
     abstract fun onCreate()
 
@@ -90,10 +90,10 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat
     }
 
     protected val viewModel: VM
-        get() = vci.viewModel
+        get() = viewController.viewModel
 
-    protected val vdb: VDB
-        get() = vci.vdb
+    protected val viewDataBinding: VDB
+        get() = viewController.vdb
 
     override val savedStateOwner: SavedStateRegistryOwner
         get() = customSavedStateOwner
@@ -191,6 +191,8 @@ abstract class MythosLayout<VM, VDB> : FrameLayout, ViewControllerCompat
                 onEventPause()
                 onEventStop()
                 onEventDestroy()
+            }
+            else -> { // no-op to exhaust when
             }
         }
     }

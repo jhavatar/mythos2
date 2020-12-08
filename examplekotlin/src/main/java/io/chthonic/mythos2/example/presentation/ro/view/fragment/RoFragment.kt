@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.FragmentRoBinding
 import io.chthonic.mythos2.example.presentation.dah.view.layout.DahLayout
@@ -15,23 +14,19 @@ import io.chthonic.mythos2.mvvm.ViewControllerCore
 
 class RoFragment : Fragment() {
 
-    private val vci: ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy {
-        ViewControllerCore.fragmentViewControllerSharedViewModel(this)
-    }
-
-    private val liveViewCount: LiveData<Int> by lazy {
-        ExampleUtils.getLiveInstanceCount(RoFragment::class.java)
-    }
-
     companion object {
+        const val TAG = "RO"
+
         fun newInstance(): RoFragment {
             val fragment = RoFragment()
             val args = Bundle()
             fragment.arguments = args
             return fragment
         }
+    }
 
-        const val TAG = "RO"
+    private val viewController: ViewControllerCore<RoViewModel, FragmentRoBinding> by lazy {
+        ViewControllerCore.fragmentViewControllerSharedViewModel(this)
     }
 
     override fun onCreateView(
@@ -39,40 +34,30 @@ class RoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        vci.bindViewModel<RoViewModel>(requireActivity().application)
-        vci.bindViewData(
+        viewController.bindViewModel<RoViewModel>(requireActivity().application)
+        viewController.bindViewData(
             layoutInflater,
             R.layout.fragment_ro,
             container,
             false
         )
-        vci.viewDataBinding.viewmodel = vci.viewModel
-        return vci.viewDataBinding.root
+        viewController.viewDataBinding.viewmodel = viewController.viewModel
+        return viewController.viewDataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        liveViewCount.observe(
-            vci.lifeCycleOwner,
+        viewController.viewModel.getViewInstanceCountObservable(RoFragment::class.java).observe(
+            viewController.lifeCycleOwner,
             {
-                ExampleUtils.upateViewCountText(vci.vdb.root, it)
+                ExampleUtils.upateViewCountText(viewController.vdb.root, it)
             }
         )
         ExampleUtils.notifyInstance(this)
 
-        vci.viewDataBinding.buttonToggleDah.setOnClickListener {
+        viewController.viewDataBinding.buttonToggleDah.setOnClickListener {
             toggleDah()
-        }
-    }
-
-    private fun toggleDah() {
-        if (vci.viewDataBinding.layoutContainer.childCount > 0) {
-            vci.viewDataBinding.layoutContainer.removeAllViews()
-        } else {
-            this.context?.let {
-                vci.viewDataBinding.layoutContainer.addView(DahLayout(it, parentFragmentTag = TAG))
-            }
         }
     }
 
@@ -84,6 +69,16 @@ class RoFragment : Fragment() {
         }
         this.arguments?.let {
             args.putAll(it)
+        }
+    }
+
+    private fun toggleDah() {
+        if (viewController.viewDataBinding.layoutContainer.childCount > 0) {
+            viewController.viewDataBinding.layoutContainer.removeAllViews()
+        } else {
+            this.context?.let {
+                viewController.viewDataBinding.layoutContainer.addView(DahLayout(it, parentFragmentTag = TAG))
+            }
         }
     }
 

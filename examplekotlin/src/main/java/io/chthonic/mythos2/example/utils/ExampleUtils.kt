@@ -16,7 +16,7 @@ object ExampleUtils {
     private val liveCountMap = mutableMapOf<Class<*>, MutableLiveData<Int>> ()
 
     @Synchronized
-    private fun getMutableLiveInstanceCount(clz: Class<*>): MutableLiveData<Int> {
+    private fun getInstanceCountMutableObservable(clz: Class<*>): MutableLiveData<Int> {
         val liveData = liveCountMap[clz]
         return if (liveData != null) {
             liveData
@@ -28,14 +28,14 @@ object ExampleUtils {
     }
 
     @Synchronized
-    fun getLiveInstanceCount(clz: Class<*>): LiveData<Int> {
-        return getMutableLiveInstanceCount(clz)
+    fun getInstanceCountObservable(clz: Class<*>): LiveData<Int> {
+        return getInstanceCountMutableObservable(clz)
     }
 
     @Synchronized
     fun notifyInstance(nuInstance: Any) {
         val clz = nuInstance::class.java
-        Timber.d("getInstanceCount $nuInstance, clz = $clz")
+        Timber.v("getInstanceCount $nuInstance, clz = $clz")
         val nuHash = nuInstance.hashCode()
         val oldHash = hashMap[clz]
         val oldCount = countMap.getOrElse(clz, { 0 })
@@ -48,8 +48,8 @@ object ExampleUtils {
         } else {
             oldCount
         }
-        Timber.d("notifyInstance: nuCount = $nuCount, clz = $clz")
-        getMutableLiveInstanceCount(clz).postValue(nuCount)
+        Timber.v("notifyInstance: nuCount = $nuCount, clz = $clz")
+        getInstanceCountMutableObservable(clz).postValue(nuCount)
     }
 
     fun upateViewCountText(root: View, viewCount: Int) {

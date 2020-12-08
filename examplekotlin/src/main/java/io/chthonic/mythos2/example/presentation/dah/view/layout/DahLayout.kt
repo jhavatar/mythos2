@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
 import io.chthonic.mythos2.example.R
 import io.chthonic.mythos2.example.databinding.LayoutDahBinding
 import io.chthonic.mythos2.example.presentation.dah.viewmodel.DahViewModel
@@ -20,29 +19,25 @@ import timber.log.Timber
  */
 class DahLayout : MythosLayout<DahViewModel, LayoutDahBinding> {
 
-    override val vci: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
+    override val viewController: ViewControllerCore<DahViewModel, LayoutDahBinding> by lazy {
         ViewControllerCore.compatViewController(this, defaultViewModelStore)
-    }
-
-    private val liveViewCount: LiveData<Int> by lazy {
-        ExampleUtils.getLiveInstanceCount(DahLayout::class.java)
     }
 
     override fun onCreate() {
         Timber.v("onCreate")
-        vci.bindViewModel<DahViewModel>(requireNotNull(application))
-        vci.bindViewData(
+        viewController.bindViewModel<DahViewModel>(requireNotNull(application))
+        viewController.bindViewData(
             LayoutInflater.from(context),
             R.layout.layout_dah,
             this,
             true
         )
-        vci.viewDataBinding.viewmodel = vci.viewModel
+        viewController.viewDataBinding.viewmodel = viewController.viewModel
 
-        liveViewCount.observe(
-            vci.lifeCycleOwner,
+        viewController.viewModel.getViewInstanceCountObservable(DahLayout::class.java).observe(
+            viewController.lifeCycleOwner,
             {
-                ExampleUtils.upateViewCountText(vdb.root, it)
+                ExampleUtils.upateViewCountText(viewDataBinding.root, it)
             }
         )
         ExampleUtils.notifyInstance(this)

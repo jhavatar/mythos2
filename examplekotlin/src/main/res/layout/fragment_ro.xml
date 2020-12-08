@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ro_text_viewmodel"
-            android:text="@{viewmodel.liveViewModelInstanceCount}"
+            android:text="@{viewmodel.viewModelInstanceCountObservable}"
             android:textColor="@android:color/black"
             tools:ignore="MissingConstraints"
             />
